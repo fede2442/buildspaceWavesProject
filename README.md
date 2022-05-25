@@ -3,16 +3,18 @@
 This is my try at buildspace's first project after finishing a solidity bootcamp.
 
 ---------------------
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
 
-Try running some of the following tasks:
+Useful links found while doing the project:
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+hardhat doc ---> https://hardhat.org/getting-started/
+Extend hre object ---> https://hardhat.org/advanced/hardhat-runtime-environment.html
+
+what's a provider ---> https://docs.ethers.io/v5/api/providers/
+12 factor app ---> https://12factor.net
+
+
+
+---------------------
+Progress images:
+ 
+![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/1.jpg?raw=true)

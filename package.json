@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "npx hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy.js"
+    "deploy": "npx hardhat run scripts/deployLocal.js --network localhost",
+    "node": "npx hardhat node",
+    "console": "npx hardhat console --no-compile"
   },
   "keywords": [],
   "author": "",

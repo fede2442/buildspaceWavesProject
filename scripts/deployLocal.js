@@ -4,12 +4,12 @@
 // hre = Hardhat Runtime Environment. No need to import it since it is injected during runtime
 const hre = require("hardhat");
 
-const main = () => {
-	const [deployer] = await hre.ethers.getSigners();
-	const accountBalance = await deployer.getBalance();
+const main = async () => {
+	const [deployerrrr] = await hre.ethers.getSigners();
+	const accountBalance = await deployerrrr.getBalance();
 
-	console.log("Deploying account: ", deployer);
-	console.log("Account Balance: ", accountBalance);
+	console.log("Deploying account: ", deployerrrr.address);
+	console.log("Account Balance: ", accountBalance.toString());
 
 	const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
 	const waveContract = await waveContractFactory.deploy();
@@ -17,6 +17,7 @@ const main = () => {
 	await waveContract.deployed();
 
 	console.log("WavePortal address: ", waveContract.address);
+	console.log("deployerrrr: ", waveContract.deployerrrr);
 
 };
 
