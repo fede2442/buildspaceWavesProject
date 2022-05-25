@@ -6,8 +6,7 @@ import "hardhat/console.sol";
 
 contract WavePortal {
     uint256 totalWaves;
-
-
+    address lastWaved;
 
     constructor() {
         console.log("5 AM cought with this awesome guide!");
@@ -15,11 +14,15 @@ contract WavePortal {
 
     function wave() public {
         totalWaves += 1;
-        console.log("% has waved!", msg.sender);
+        lastWaved = msg.sender;
     }
 
     function getTotalWaves() public view returns(uint256 _totalWaves){
         _totalWaves = totalWaves;
-        console.log("% total waves",_totalWaves);
+    }
+
+    function getLastWaved() public view returns(address){
+        console.log("last waved: ", lastWaved);
+        return lastWaved;
     }
 }
