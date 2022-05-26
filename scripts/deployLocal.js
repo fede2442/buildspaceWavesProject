@@ -5,10 +5,10 @@
 const hre = require("hardhat");
 
 const main = async () => {
-	const [deployerrrr] = await hre.ethers.getSigners();
-	const accountBalance = await deployerrrr.getBalance();
+	const [deployer] = await hre.ethers.getSigners();
+	const accountBalance = await deployer.getBalance();
 
-	console.log("Deploying account: ", deployerrrr.address);
+	console.log("Deploying account: ", deployer.address);
 	console.log("Account Balance: ", accountBalance.toString());
 
 	const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
@@ -17,7 +17,6 @@ const main = async () => {
 	await waveContract.deployed();
 
 	console.log("WavePortal address: ", waveContract.address);
-	console.log("deployerrrr: ", waveContract.deployerrrr);
 
 };
 
