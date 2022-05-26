@@ -18,6 +18,10 @@ const main = async () => {
 
 	console.log("WavePortal address: ", waveContract.address);
 
+	// Without callStatic we get a transaction as result of the contract call on-chain. This is a simulation of on-chain call.
+	const compare = await waveContract.callStatic.waveAndGuess(10);
+
+	console.log("resultado: ", compare);
 };
 
 const runMain = async () => {
@@ -29,5 +33,5 @@ const runMain = async () => {
 		process.exit(1);
 	}
 };
-  
+
 runMain();
