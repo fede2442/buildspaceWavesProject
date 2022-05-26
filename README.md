@@ -18,8 +18,10 @@ dotenv tut ---> https://zetcode.com/javascript/dotenv/
 12 factor app ---> https://12factor.net
 
 solidity special variables ---> https://docs.soliditylang.org/en/latest/units-and-global-variables.html?highlight=block#block-and-transaction-properties
-
 Solidity custom errors ---> https://blog.soliditylang.org/2021/04/21/custom-errors/
+Withdrawal pattern ---> https://docs.soliditylang.org/en/v0.8.14/common-patterns.html
+Security considerations in solidity ---> https://docs.soliditylang.org/en/v0.8.14/security-considerations.html#security-considerations
+
 
 Issue calling on-chain from off-chain // calling contract methods returning tx ---> https://ethereum.stackexchange.com/questions/88119/i-see-no-way-to-obtain-the-return-value-of-a-non-view-function-ethers-js
 
