@@ -20,6 +20,7 @@ testing contracts ---> https://hardhat.org/tutorial/testing-contracts.html
 what's a provider ---> https://docs.ethers.io/v5/api/providers/
 
 dotenv tut ---> https://zetcode.com/javascript/dotenv/
+
 12 factor app ---> https://12factor.net
 
 
@@ -31,8 +32,9 @@ Withdrawal pattern ---> https://docs.soliditylang.org/en/v0.8.14/common-patterns
 
 Security considerations in solidity ---> https://docs.soliditylang.org/en/v0.8.14/security-considerations.html#security-considerations
 
-
 Issue calling on-chain from off-chain // calling contract methods returning tx ---> https://ethereum.stackexchange.com/questions/88119/i-see-no-way-to-obtain-the-return-value-of-a-non-view-function-ethers-js
+
+Reentrancy attack ---> https://blog.openzeppelin.com/reentrancy-after-istanbul/
 
 ---
 
