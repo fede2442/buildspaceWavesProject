@@ -18,4 +18,6 @@ what's a provider ---> https://docs.ethers.io/v5/api/providers/
 Progress images:
  
 ![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/ScreenShots/1.JPG)
+![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/ScreenShots/2.JPG)
+![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/ScreenShots/3.JPG)
 
