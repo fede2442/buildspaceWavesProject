@@ -2,6 +2,8 @@
 
 This is my try at buildspace's first project after finishing a solidity bootcamp.
 
+Heroku URL deployed: https://buildspace-waves-app.herokuapp.com/
+
 ---------------------
 
 Useful links found while doing the project:

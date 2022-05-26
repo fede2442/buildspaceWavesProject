@@ -8,7 +8,8 @@
     "compile": "npx hardhat compile",
     "deploy": "npx hardhat run scripts/deployLocal.js --network localhost",
     "node": "npx hardhat node",
-    "console": "npx hardhat console --no-compile"
+    "console": "npx hardhat console --no-compile",
+    "herokuDeploy": "cd client && heroku login && git add . && git commit -m \"prueba\" && git push heroku"
   },
   "keywords": [],
   "author": "",
