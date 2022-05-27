@@ -8,10 +8,10 @@ contract WavePortal {
 
     //winner address => amountWon , save winners until they withdraw to follow withdrawal pattern.
     mapping(address => uint256) public pendingWinners; 
-    mapping(address => Precision) public records;
+    mapping(address => HistoricPlays) public records;
     uint256 public jackpot;
 
-    struct Precision {
+    struct HistoricPlays {
       uint256 timesPlayed;
       uint256 timesWon;
       uint256 totalWon;
@@ -32,9 +32,11 @@ contract WavePortal {
     error AccountIsNotAWinner();
     error AmountUnderMinBet();
 
-    event Winner(address indexed winner, uint256 indexed vaultAmount);
     event Guess(address indexed guesser, uint indexed guessed, uint256 indexed toGuess, uint256 vaultAmount);
+    event Winner(address indexed winner, uint256 indexed vaultAmount);
+    event Withdrawal(address indexed winner, uint256 indexed amountWitdrawed);
 
+    // checks - effects - interactions
     function waveAndGuess(uint256 _guess) public payable returns(bool isWinner){
         if(msg.value < 0.1 ether) revert AmountUnderMinBet();
         if(_guess <= 0 || _guess > 10) revert InvalidNumber();
@@ -75,18 +77,21 @@ contract WavePortal {
 
     // Using withdrawal pattern to avoid exploits.
     // https://docs.soliditylang.org/en/v0.8.14/common-patterns.html
+    // Use checks - effects - interactions to avoid reentrancy
+    // https://blog.openzeppelin.com/reentrancy-after-istanbul/
     function retrieveLoot() public onlyWinners payable{
 
         //need to retrieve only what they won.
         uint256 totalWon = pendingWinners[msg.sender];
-        (bool success, ) = payable(msg.sender).call{value: totalWon}("");
 
         // restart their claiming price
         pendingWinners[msg.sender] = 0;
-
+        (bool success, ) = payable(msg.sender).call{value: totalWon}("");
+        
         //IMPORTANT: always have a require after ".call" 
         //https://medium.com/coinmonks/solidity-transfer-vs-send-vs-call-function-64c92cfc878a
-        require(success, "Transfer failed."); 
+        require(success, "Withdrawal failed.");
+        emit Withdrawal(msg.sender, totalWon);
     }
 
     function getTotalVault() public view returns (uint256){
