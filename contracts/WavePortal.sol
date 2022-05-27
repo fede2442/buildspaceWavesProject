@@ -2,9 +2,14 @@
 
 pragma solidity ^0.8.4;
 
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/utils/Counters.sol";
 import "hardhat/console.sol";
 
+
+//https://consensys.github.io/smart-contract-best-practices/
 contract WavePortal {
+    // https://docs.openzeppelin.com/contracts/3.x/api/utils#Counters
+    using Counters for Counters.Counter;
 
     //winner address => amountWon , save winners until they withdraw to follow withdrawal pattern.
     mapping(address => uint256) public pendingWinners; 
@@ -12,15 +17,15 @@ contract WavePortal {
     uint256 public jackpot;
 
     struct HistoricPlays {
-      uint256 timesPlayed;
-      uint256 timesWon;
+      Counters.Counter timesPlayed;
+      Counters.Counter timesWon;
       uint256 totalWon;
       uint256 totalBet;
     }
 
     modifier onlyWinners()
     {
-        // if 0 the address is not in the winners map
+        // if 0, means that the address is not in the winners map
         // https://ethereum.stackexchange.com/questions/13021/how-can-you-figure-out-if-a-certain-key-exists-in-a-mapping-struct-defined-insi
         if (pendingWinners[msg.sender] <= 0)
             revert AccountIsNotAWinner();
@@ -38,7 +43,7 @@ contract WavePortal {
 
     // checks - effects - interactions
     function waveAndGuess(uint256 _guess) public payable returns(bool isWinner){
-        if(msg.value < 0.1 ether) revert AmountUnderMinBet();
+        if(msg.value < 0.05 ether) revert AmountUnderMinBet();
         if(_guess <= 0 || _guess > 10) revert InvalidNumber();
 
         // decide if winner or loser
@@ -46,31 +51,23 @@ contract WavePortal {
         isWinner = numberToGuess == _guess;
         jackpot = jackpot + msg.value;
 
-        // TODO: Investigate and use Open Zepellins counters ?
+        // TODO: Investigate and use Open Zeppelin counters ?
         // received correct bet with enough money and valid number
-        
-        records[msg.sender].timesPlayed = records[msg.sender].timesPlayed + 1; 
+        records[msg.sender].timesPlayed.increment(); 
         records[msg.sender].totalBet = records[msg.sender].totalBet + msg.value; 
 
-        if(isWinner){
-            records[msg.sender].timesWon = records[msg.sender].timesWon + 1;
-            records[msg.sender].totalWon = records[msg.sender].totalWon + jackpot; 
-
-            setWinner(); 
-        }
+        if(isWinner) setWinner(); 
+        //if(pickLotteryTicket) setLotteryWinner();
 
         emit Guess(msg.sender, _guess, numberToGuess, jackpot);
     }
 
-    // Modify later on to get a real random number. Possibly use chainlink VRF. Now it's a pseudorandom.
-    function getRandomToGuess() internal pure returns (uint256){
-        //return (block.difficulty / block.number) % 10;
-        return 5;
-    }
-
     // Reset jackpot after new winner to start again
     function setWinner() internal {
+        records[msg.sender].timesWon.increment();
+        records[msg.sender].totalWon = records[msg.sender].totalWon + jackpot; 
         pendingWinners[msg.sender] = pendingWinners[msg.sender] + jackpot; //in case someone wins more than once
+        
         jackpot = 0;
         emit Winner(msg.sender, pendingWinners[msg.sender]);
     }
@@ -100,5 +97,20 @@ contract WavePortal {
 
     function getJackpot() public view returns(uint256){
         return jackpot;
+    }
+
+    function pickLotteryTicket(uint256) public view returns(bool){
+        uint8 toGuess = 24;
+        uint256 randomNormalized = (getRandomToGuess() * 120) % 100;
+
+        console.log("randomNormalized",randomNormalized);
+
+        return toGuess == randomNormalized;
+    } 
+
+    // Modify later on to get a real random number. Possibly use chainlink VRF. Now it's a pseudorandom.
+    function getRandomToGuess() internal pure returns (uint256){
+        //return (block.difficulty / block.number) % 10;
+        return 5;
     }
 }

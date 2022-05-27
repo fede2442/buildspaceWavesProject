@@ -36,6 +36,9 @@ Issue calling on-chain from off-chain // calling contract methods returning tx -
 
 Reentrancy attack ---> https://blog.openzeppelin.com/reentrancy-after-istanbul/
 
+OpenZepellin counters ---> https://docs.openzeppelin.com/contracts/3.x/api/utils#Counters
+
+Ethereum smart contracts good practices ---> https://consensys.github.io/smart-contract-best-practices/
 ---
 
 Progress images:
