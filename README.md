@@ -39,6 +39,19 @@ Reentrancy attack ---> https://blog.openzeppelin.com/reentrancy-after-istanbul/
 OpenZepellin counters ---> https://docs.openzeppelin.com/contracts/3.x/api/utils#Counters
 
 Ethereum smart contracts good practices ---> https://consensys.github.io/smart-contract-best-practices/
+
+
+Some issues found along the way: 
+
+Having a the client inside the repo with it's .git made the original repo not follow the subrepo.
+FIX:
+    - delete .git folder in client
+    - run in console:  git rm --cached client
+    - add, commit and push.
+    
+https://stackoverflow.com/questions/62056294/github-folders-have-a-white-arrow-on-them#:~:text=In%20both%20cases%20(white%20arrow,repository%2C%20hence%20an%20empty%20folder.
+
+
 ---
 
 Progress images:
