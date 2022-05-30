@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "npx hardhat test",
 		"compile": "npx hardhat compile",
 		"deploy": "npx hardhat run scripts/deployLocal.js --network localhost",
 		"node": "npx hardhat node",
@@ -24,7 +24,8 @@
 		"eslint-plugin-react": "^7.30.0",
 		"ethereum-waffle": "^3.4.4",
 		"ethers": "^5.6.8",
-		"hardhat": "^2.9.6"
+		"hardhat": "^2.9.6",
+		"hardhat-gas-reporter": "^1.0.8"
 	},
 	"dependencies": {
 		"@openzeppelin/contracts": "^4.6.0",
