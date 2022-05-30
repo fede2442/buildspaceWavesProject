@@ -99,14 +99,15 @@ contract WavePortal {
         return jackpot;
     }
 
-    function pickLotteryTicket(uint256) public view returns(bool){
-        uint8 toGuess = 24;
-        uint256 randomNormalized = (getRandomToGuess() * 120) % 100;
+    // TODO: Add a lottery extra fund
+    // function pickLotteryTicket(uint256) public view returns(bool){
+    //     uint8 toGuess = 24;
+    //     uint256 randomNormalized = (getRandomToGuess() * 120) % 100;
 
-        console.log("randomNormalized",randomNormalized);
+    //     console.log("randomNormalized",randomNormalized);
 
-        return toGuess == randomNormalized;
-    } 
+    //     return toGuess == randomNormalized;
+    // } 
 
     // Modify later on to get a real random number. Possibly use chainlink VRF. Now it's a pseudorandom.
     function getRandomToGuess() internal pure returns (uint256){
