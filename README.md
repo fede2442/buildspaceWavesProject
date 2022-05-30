@@ -41,6 +41,10 @@ OpenZepellin counters ---> https://docs.openzeppelin.com/contracts/3.x/api/utils
 Ethereum smart contracts good practices ---> https://consensys.github.io/smart-contract-best-practices/
 
 
+Testing:
+
+- Waffle Matchers ---> https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
+
 Some issues found along the way: 
 
 Having a the client inside the repo with it's .git made the original repo not follow the subrepo.
@@ -51,6 +55,11 @@ FIX:
     
 https://stackoverflow.com/questions/62056294/github-folders-have-a-white-arrow-on-them#:~:text=In%20both%20cases%20(white%20arrow,repository%2C%20hence%20an%20empty%20folder.
 
+What is the address of the deployer in hardhat?
+
+"Remember that the owner of the token who gets the entire supply is the account that makes the deployment, and when using the hardhat-ethers plugin ContractFactory and Contract instances are connected to the first signer by default. This means that the account in the owner variable executed the deployment, and balanceOf() should return the entire supply amount."
+
+https://hardhat.org/tutorial/testing-contracts.html
 
 ---
 

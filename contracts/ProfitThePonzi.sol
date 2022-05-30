@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.4;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "hardhat/console.sol";
 
 
 //https://consensys.github.io/smart-contract-best-practices/
-contract WavePortal {
+contract ProfitThePonzi {
     // https://docs.openzeppelin.com/contracts/3.x/api/utils#Counters
     using Counters for Counters.Counter;
 
