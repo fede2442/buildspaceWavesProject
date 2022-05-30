@@ -45,6 +45,9 @@ Testing:
 
 - Waffle Matchers ---> https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
 
+- Gas reporter ---> https://www.npmjs.com/package/hardhat-gas-reporter
+
+
 Some issues found along the way: 
 
 Having a the client inside the repo with it's .git made the original repo not follow the subrepo.
