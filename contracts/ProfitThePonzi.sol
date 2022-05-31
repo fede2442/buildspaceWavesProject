@@ -11,24 +11,16 @@ contract ProfitThePonzi {
     // https://docs.openzeppelin.com/contracts/3.x/api/utils#Counters
     using Counters for Counters.Counter;
     
-    // Too many variables? think of a struct that could help ?
-    mapping(address => uint256[]) public lotteryOwners;
-    address[] public lotteryPlayers;
-    mapping(uint256 => address) public lotteryTickets;
-    mapping(address => uint256) public pendingWinners; 
+    uint256 public constant amountOfTickets = 10;
+    address[amountOfTickets] public ticketOwners; 
+    Counters.Counter public soldTicketsCounter;  
+    Counters.Counter public lotteryId;  
+
     uint256 public jackpot;
     uint256 public superJackpot;
-    uint256 public constant amountOfTickets = 10;
-    Counters.Counter public soldTicketsCounter;  
+    mapping(address => uint256) public pendingWinners; 
 
-/*
-    struct HistoricPlays {
-      Counters.Counter ticketsBought;
-      Counters.Counter timesWon;
-      uint256 totalWon;
-      uint256 totalBet;
-    }
-*/
+
     modifier onlyWinners()
     {
         // if 0, means that the address is not in the winners map
@@ -45,84 +37,71 @@ contract ProfitThePonzi {
     error AmountUnderMinBet();
     error MaxAmountOfTickets();
 
-    event Winner(address indexed winner, uint256 indexed vaultAmount);
+    event Winner(uint256 indexed _lotteryId, address indexed winner, uint256 indexed vaultAmount);
     event Withdrawal(address indexed winner, uint256 indexed amountWitdrawed);
-    event BoughtTicket(address indexed buyer, uint256 indexed ticketNumber);
+    event BoughtTicket(uint256 indexed _lotteryId, address indexed buyer, uint256 indexed ticketNumber);
+    event NewLotteryStarted(uint256 indexed newLotteryId);
 
-    function buyTicket(uint256 _ticketNumber) public payable{
-        if(lotteryTickets[_ticketNumber] != address(0)) revert LotteryNumberAlreadySold();
-        if(lotteryOwners[msg.sender].length == 5) revert MaxAmountOfTickets();
-        if(msg.value != 0.1 ether) revert AmountUnderMinBet();
+    function buyTicketOwners(uint256 _ticketNumber) public payable{
         if(_ticketNumber <= 0 || _ticketNumber > amountOfTickets) revert InvalidTicketNumber();
+        console.log("pass first");
+        if(ticketOwners[_ticketNumber - 1] != address(0)) revert LotteryNumberAlreadySold();
+        if(!canBuyMore(msg.sender)) revert MaxAmountOfTickets();
+        console.log("pass third");
+        if(msg.value != 1 ether) revert AmountUnderMinBet();
+        console.log("pass fourth");
 
-        jackpot += msg.value;
-        lotteryOwners[msg.sender].push(_ticketNumber);
-        lotteryTickets[_ticketNumber] = msg.sender;
-        lotteryPlayers.push(msg.sender);
+        console.log(ticketOwners[7]);
+
+        jackpot += msg.value;       
+        ticketOwners[_ticketNumber - 1] = msg.sender;
         soldTicketsCounter.increment();
-
-        // received correct bet with enough money and valid number
-        //records[msg.sender].ticketsBought.increment(); 
-        //records[msg.sender].totalBet += msg.value;
 
         if(soldTicketsCounter.current() == amountOfTickets){
             endLottery();
         }
 
-        emit BoughtTicket(msg.sender, _ticketNumber);
+        emit BoughtTicket(lotteryId.current(), msg.sender, _ticketNumber);
+    }
+
+    function canBuyMore(address _buyer) internal view returns(bool result){
+        uint8 count = 0;
+        for(uint i=0; i < ticketOwners.length; i++){
+            if(ticketOwners[i] == _buyer){
+                count++;
+                if(count == 5) return false;
+            }
+        }
+        return true;
     }
 
     function endLottery() internal {
-        uint256 winnerOne = getRandomToGuess();
-        uint256 winnerTwo = getRandomToGuess() + 1;
-        uint256 winnerThree = getRandomToGuess() + 2;
+        uint256 winnerTicketOne = getRandomToGuess();
+        uint256 winnerTicketTwo = winnerTicketOne + 1;
+        uint256 winnerTicketThree = winnerTicketTwo + 1;
 
-        address[3] memory winners = [lotteryTickets[winnerOne], lotteryTickets[winnerTwo], lotteryTickets[winnerThree]];
+        pendingWinners[ticketOwners[winnerTicketOne]] += (jackpot * 24 / 50); // 48%
+        pendingWinners[ticketOwners[winnerTicketTwo]] += (jackpot * 13 / 50); // 26%
+        pendingWinners[ticketOwners[winnerTicketThree]] += (jackpot * 4 / 25); // 16%
 
-        pendingWinners[winners[0]] += (jackpot * 24 / 50); // 48%
-        pendingWinners[winners[1]] += (jackpot * 13 / 50); // 26%
-        pendingWinners[winners[2]] += (jackpot * 4 / 25); // 16%
         superJackpot = jackpot / 10;
 
-        resetLottery();
+        emit Winner(lotteryId.current(), ticketOwners[winnerTicketOne], pendingWinners[ticketOwners[winnerTicketOne]]);
+        emit Winner(lotteryId.current(), ticketOwners[winnerTicketTwo], pendingWinners[ticketOwners[winnerTicketTwo]]);
+        emit Winner(lotteryId.current(), ticketOwners[winnerTicketThree], pendingWinners[ticketOwners[winnerTicketThree]]);
         
-        emit Winner(winners[0], pendingWinners[winners[0]]);
-        emit Winner(winners[1], pendingWinners[winners[1]]);
-        emit Winner(winners[2], pendingWinners[winners[2]]);
+        resetLottery();
     }
 
     function resetLottery() internal {
         jackpot = 0;
-
-        for(uint i = 0; i <  lotteryPlayers.length; i++){
-            delete lotteryOwners[lotteryPlayers[i]];
-        }
-
-        for(uint i = 1; i <=  amountOfTickets; i++){
-            lotteryTickets[i] = address(0);
-        }
-
+        delete ticketOwners;
         soldTicketsCounter.reset();
+        lotteryId.increment();
 
-        delete lotteryPlayers;
+        emit NewLotteryStarted(lotteryId.current());
     }
-
-    function ticketsBoughtBy(address _buyer) public view returns(uint256[] memory){
-        return lotteryOwners[_buyer];
-    }
-
-    function buyerOfTicket(uint256 _ticketNumber) public view returns(address){
-        return lotteryTickets[_ticketNumber];
-    }
-
-    function getSoldTickets() public view returns(uint256[amountOfTickets] memory _soldTickets){
-        for(uint i = 0; i <  amountOfTickets; i++){
-            if(lotteryTickets[i] != address(0)){
-                _soldTickets[i] = i + 1;
-            }
-        }
-    }
-
+    
     // Using withdrawal pattern to avoid exploits.
     // https://docs.soliditylang.org/en/v0.8.14/common-patterns.html
     // Use checks - effects - interactions to avoid reentrancy
@@ -142,6 +121,26 @@ contract ProfitThePonzi {
         require(success, "Withdrawal failed.");
 
         emit Withdrawal(msg.sender, totalWon);
+    }
+
+    function buyerOfTicket(uint256 _ticketNumber) public view returns(address){
+        return ticketOwners[_ticketNumber];
+    }
+
+    function getTicketsSold() public view returns(uint256[amountOfTickets] memory _tickets){
+        for(uint i=0; i < ticketOwners.length; i++){
+            if(ticketOwners[i] != address(0)){
+                _tickets[i] = i+1;
+            }
+        }
+    }
+
+    function getTicketsBoughtBy(address _owner) public view returns(uint256[amountOfTickets] memory _tickets){
+        for(uint i=0; i < ticketOwners.length; i++){
+            if(ticketOwners[i] == _owner){
+                _tickets[i] = i+1;
+            }
+        }
     }
 
     function getJackpot() public view returns(uint256){
