@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from "react";
 import { ethers } from "ethers";
 import './App.css';
-
+import abi from "../src/utils/Lottery.json";
 export default function App() {
 
   const [currentAccount, setCurrentAccount] = useState("");
@@ -49,6 +49,25 @@ export default function App() {
     }
   }
 
+  const getTicketsSold = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        // const provider = new ethers.providers.Web3Provider(ethereum);
+        // const signer = provider.getSigner();
+        // const lotteryContract = new ethers.Contract(contractAddress, abi, signer);
+
+        // let ticketsSold = await lotteryContract.getSoldTickets();
+        // console.log("Got all this tickets", ticketsSold);
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
       checkIfWalletIsConnected();
   }, [])
@@ -69,6 +88,9 @@ export default function App() {
 
         <button className="waveButton" onClick={connectWallet}>
           Connect Wallet 
+        </button>
+        <button className="waveButton" onClick={getTicketsSold}>
+          get tickets sold 
         </button>
       </div>
     </div>

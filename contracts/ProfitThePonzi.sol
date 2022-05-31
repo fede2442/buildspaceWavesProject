@@ -52,7 +52,7 @@ contract ProfitThePonzi {
     function buyTicket(uint256 _ticketNumber) public payable{
         if(lotteryTickets[_ticketNumber] != address(0)) revert LotteryNumberAlreadySold();
         if(lotteryOwners[msg.sender].length == 5) revert MaxAmountOfTickets();
-        if(msg.value != 1 ether) revert AmountUnderMinBet();
+        if(msg.value != 0.1 ether) revert AmountUnderMinBet();
         if(_ticketNumber <= 0 || _ticketNumber > amountOfTickets) revert InvalidTicketNumber();
 
         jackpot += msg.value;
@@ -115,7 +115,7 @@ contract ProfitThePonzi {
         return lotteryTickets[_ticketNumber];
     }
 
-    function soldTickets() public view returns(uint256[amountOfTickets] memory _soldTickets){
+    function getSoldTickets() public view returns(uint256[amountOfTickets] memory _soldTickets){
         for(uint i = 0; i <  amountOfTickets; i++){
             if(lotteryTickets[i] != address(0)){
                 _soldTickets[i] = i + 1;
