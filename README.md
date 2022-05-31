@@ -65,6 +65,19 @@ What is the address of the deployer in hardhat?
 https://hardhat.org/tutorial/testing-contracts.html
 
 ---
+Ideas for the lottery:
+
+- Selling 50 tickets 1 to 50.
+- each account can only buy up to 5 tickets.
+- ticket price should be low, 0.05 eth each.
+- There will be 3 winners.
+    *First --- 48%
+    *Second --- 26%
+    *Third --- 16%
+    *SuperJackpot --- 10%
+- SuperJackpot winning not defined yet
+
+---
 
 Progress images:
 
