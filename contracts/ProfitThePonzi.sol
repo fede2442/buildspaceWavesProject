@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "hardhat/console.sol";
@@ -20,7 +20,6 @@ contract ProfitThePonzi {
     uint256 public superJackpot;
     mapping(address => uint256) public pendingWinners; 
 
-
     modifier onlyWinners()
     {
         // if 0, means that the address is not in the winners map
@@ -32,7 +31,6 @@ contract ProfitThePonzi {
     
     error LotteryNumberAlreadySold();
     error InvalidTicketNumber();
-    error NotTheOwner();
     error AccountIsNotAWinner();
     error AmountUnderMinBet();
     error MaxAmountOfTickets();
@@ -41,38 +39,23 @@ contract ProfitThePonzi {
     event Withdrawal(address indexed winner, uint256 indexed amountWitdrawed);
     event BoughtTicket(uint256 indexed _lotteryId, address indexed buyer, uint256 indexed ticketNumber);
     event NewLotteryStarted(uint256 indexed newLotteryId);
+    event SuperJackpot(uint256 indexed _lotteryId, uint256 _superJackpot);
 
-    function buyTicketOwners(uint256 _ticketNumber) public payable{
+    function buyTicket(uint256 _ticketNumber) public payable{
         if(_ticketNumber <= 0 || _ticketNumber > amountOfTickets) revert InvalidTicketNumber();
-        console.log("pass first");
         if(ticketOwners[_ticketNumber - 1] != address(0)) revert LotteryNumberAlreadySold();
         if(!canBuyMore(msg.sender)) revert MaxAmountOfTickets();
-        console.log("pass third");
         if(msg.value != 1 ether) revert AmountUnderMinBet();
-        console.log("pass fourth");
-
-        console.log(ticketOwners[7]);
 
         jackpot += msg.value;       
         ticketOwners[_ticketNumber - 1] = msg.sender;
         soldTicketsCounter.increment();
 
+        emit BoughtTicket(lotteryId.current(), msg.sender, _ticketNumber);
+
         if(soldTicketsCounter.current() == amountOfTickets){
             endLottery();
         }
-
-        emit BoughtTicket(lotteryId.current(), msg.sender, _ticketNumber);
-    }
-
-    function canBuyMore(address _buyer) internal view returns(bool result){
-        uint8 count = 0;
-        for(uint i=0; i < ticketOwners.length; i++){
-            if(ticketOwners[i] == _buyer){
-                count++;
-                if(count == 5) return false;
-            }
-        }
-        return true;
     }
 
     function endLottery() internal {
@@ -80,11 +63,18 @@ contract ProfitThePonzi {
         uint256 winnerTicketTwo = winnerTicketOne + 1;
         uint256 winnerTicketThree = winnerTicketTwo + 1;
 
+        // every 15 lotteries we play for the superJackpot
+        if(lotteryId.current() % 15 == 0){
+            jackpot += (superJackpot * 9 / 10);
+            superJackpot = superJackpot * 1 / 10;
+            emit SuperJackpot(lotteryId.current(), superJackpot * 9 / 10);
+        }
+
         pendingWinners[ticketOwners[winnerTicketOne]] += (jackpot * 24 / 50); // 48%
         pendingWinners[ticketOwners[winnerTicketTwo]] += (jackpot * 13 / 50); // 26%
         pendingWinners[ticketOwners[winnerTicketThree]] += (jackpot * 4 / 25); // 16%
 
-        superJackpot = jackpot / 10;
+        superJackpot = jackpot / 10; // 10%
 
         emit Winner(lotteryId.current(), ticketOwners[winnerTicketOne], pendingWinners[ticketOwners[winnerTicketOne]]);
         emit Winner(lotteryId.current(), ticketOwners[winnerTicketTwo], pendingWinners[ticketOwners[winnerTicketTwo]]);
@@ -123,8 +113,19 @@ contract ProfitThePonzi {
         emit Withdrawal(msg.sender, totalWon);
     }
 
+    function canBuyMore(address _buyer) internal view returns(bool result){
+        uint8 count = 0;
+        for(uint i=0; i < ticketOwners.length; i++){
+            if(ticketOwners[i] == _buyer){
+                count++;
+                if(count == 5) return false;
+            }
+        }
+        return true;
+    }
+
     function buyerOfTicket(uint256 _ticketNumber) public view returns(address){
-        return ticketOwners[_ticketNumber];
+        return ticketOwners[_ticketNumber - 1];
     }
 
     function getTicketsSold() public view returns(uint256[amountOfTickets] memory _tickets){
@@ -153,7 +154,7 @@ contract ProfitThePonzi {
         return 5;
     }
 
-    function getBalance() public view returns(uint256){
+    function getContractBalance() public view returns(uint256){
         return address(this).balance;
     }
 }
