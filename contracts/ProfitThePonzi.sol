@@ -45,7 +45,7 @@ contract ProfitThePonzi {
         if(_ticketNumber <= 0 || _ticketNumber > amountOfTickets) revert InvalidTicketNumber();
         if(ticketOwners[_ticketNumber - 1] != address(0)) revert LotteryNumberAlreadySold();
         if(!canBuyMore(msg.sender)) revert MaxAmountOfTickets();
-        if(msg.value != 1 ether) revert AmountUnderMinBet();
+        if(msg.value != 0.1 ether) revert AmountUnderMinBet();
 
         jackpot += msg.value;       
         ticketOwners[_ticketNumber - 1] = msg.sender;
