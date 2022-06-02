@@ -1,24 +1,28 @@
 import { expect, use } from 'chai';
-import { Contract } from 'ethers';
+import { Contract, Signer } from 'ethers';
+import { ethers } from "hardhat";
 import { deployContract, MockProvider, solidity } from 'ethereum-waffle';
-import ProfitThePonzi from '../artifacts/contracts/ProfitThePonzi.sol/ProfitThePonzi.json';
-
-use(solidity);
+import { ProfitThePonzi } from '../typechain/ProfitThePonzi';
 
 // https://dev.to/open-wc/shared-behaviors-best-practices-with-mocha-519d#mocha-way
 describe('Buying a ticket', () => {
-  const [wallet, walletTo] = new MockProvider().getWallets();
 
-  let lottery: Contract;
+  let lottery: ProfitThePonzi;
+  let wallet: Signer;
+  let walletTo: Signer;
 
   beforeEach(async () => {
-    lottery = await deployContract(wallet, ProfitThePonzi);
+    [wallet, walletTo] = await ethers.getSigners();
+
+    const profitThePonziFactory = await ethers.getContractFactory("ProfitThePonzi");
+    lottery = await profitThePonziFactory.deploy();
+    await lottery.deployed();
   });
 
   // validations
   test.only('Player should be able to purchase one ticket of choice', async () => {
     await lottery.buyTicket(1);
-    expect(lottery.ticketOwners[0]).to.equal(wallet);
+    expect(lottery.amountOfTickets()).to.equal(wallet);
     expect(await lottery.buyerOfTicket(1)).to.equal(wallet);
   });
 
