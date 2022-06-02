@@ -30,5 +30,33 @@
   padding: 8px;
   border: 0;
   border-radius: 5px;
-  
+}
+
+.grid-container {
+  display: grid; 
+  grid-auto-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-rows: 8fr 8fr 8fr 8fr 8fr 8fr 8fr 8fr 8fr 8fr; 
+  gap: 5px 5px; 
+  border-width: 5px;
+  grid-template-areas: 
+    ". . . . ."
+    ". . . . ."
+    ". . . . ."
+    ". . . . ."
+    ". . . . ."
+    ". . . . ."
+    ". . . . ."
+    ". . . . ."
+    ". . . . ."
+    ". . . . .";
+}
+
+.box{
+  background-color: white;
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 5px;
+  height: 20px;
+
 }

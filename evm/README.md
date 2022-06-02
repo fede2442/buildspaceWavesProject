@@ -43,6 +43,8 @@ Ethereum smart contracts good practices ---> https://consensys.github.io/smart-c
 
 Testing:
 
+- Awesome article testing solidity: https://stermi.medium.com/how-to-create-tests-for-your-solidity-smart-contract-9fbbc4f0a319
+
 - Waffle Matchers ---> https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
 
 - Gas reporter ---> https://www.npmjs.com/package/hardhat-gas-reporter

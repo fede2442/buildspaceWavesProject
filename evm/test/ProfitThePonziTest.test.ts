@@ -1,74 +1,63 @@
-import { expect, use } from 'chai';
-import { Contract, Signer } from 'ethers';
+import { expect } from "chai";
+import { Signer } from "ethers";
 import { ethers } from "hardhat";
-import { deployContract, MockProvider, solidity } from 'ethereum-waffle';
-import { ProfitThePonzi } from '../typechain/ProfitThePonzi';
+// eslint-disable-next-line node/no-missing-import
+import { ProfitThePonzi } from "../typechain/ProfitThePonzi";
 
 // https://dev.to/open-wc/shared-behaviors-best-practices-with-mocha-519d#mocha-way
-describe('Buying a ticket', () => {
-
+// Awesome testing article: https://stermi.medium.com/how-to-create-tests-for-your-solidity-smart-contract-9fbbc4f0a319
+describe("Buying a ticket", () => {
   let lottery: ProfitThePonzi;
   let wallet: Signer;
+  // eslint-disable-next-line no-unused-vars
   let walletTo: Signer;
 
   beforeEach(async () => {
     [wallet, walletTo] = await ethers.getSigners();
 
-    const profitThePonziFactory = await ethers.getContractFactory("ProfitThePonzi");
+    const profitThePonziFactory = await ethers.getContractFactory(
+      "ProfitThePonzi"
+    );
     lottery = await profitThePonziFactory.deploy();
     await lottery.deployed();
   });
 
   // validations
-  test.only('Player should be able to purchase one ticket of choice', async () => {
+  it("Player should be able to purchase one ticket of choice", async () => {
     await lottery.buyTicket(1);
     expect(lottery.amountOfTickets()).to.equal(wallet);
     expect(await lottery.buyerOfTicket(1)).to.equal(wallet);
   });
 
-  it('ticket number below or equal to 0 should revert InvalidTicketNumber', async () => {
-  });
+  it("ticket number below or equal to 0 should revert InvalidTicketNumber", async () => {});
 
-  it('ticket number over amountOfTickets should revert InvalidTicketNumber', async () => {
-  });
+  it("ticket number over amountOfTickets should revert InvalidTicketNumber", async () => {});
 
-  it('buying a ticket already aquired should revert LotteryNumberAlreadySold', async () => {
-  });
+  it("buying a ticket already aquired should revert LotteryNumberAlreadySold", async () => {});
 
-  it('buying 6 tickets should revert with MaxAmountOfTickets', async () => {
-  });
+  it("buying 6 tickets should revert with MaxAmountOfTickets", async () => {});
 
-  it('not sending 1 eth to buy a ticket should revert ', async () => {
-  });
+  it("not sending 1 eth to buy a ticket should revert ", async () => {});
 
   // positive cases
-  it('Jackpot should be equal to (ticketsSold * ticketPrice)', async () => {
-  });
+  it("Jackpot should be equal to (ticketsSold * ticketPrice)", async () => {});
 
-  it('buying a token makes the address the ticket Owner', async () => {
-  });
+  it("buying a token makes the address the ticket Owner", async () => {});
 
-  it('.getTicketsBoughtBy(_owner) returns the tickets bought by _owner', async () => {
-  });
+  it(".getTicketsBoughtBy(_owner) returns the tickets bought by _owner", async () => {});
 
-  it('.getTicketsSold() returns all sold tickets', async () => {
-  });
+  it(".getTicketsSold() returns all sold tickets", async () => {});
 
-  it('.buyerOfTicket(_ticketNumber) returns owner of _ticketNumber', async () => {
-  });
+  it(".buyerOfTicket(_ticketNumber) returns owner of _ticketNumber", async () => {});
 
-  it('.getJackpot() returns jackpot to earn in that lottery', async () => {
-  });
+  it(".getJackpot() returns jackpot to earn in that lottery", async () => {});
 
-  describe('After all tickets sold', () => {
-    it('lottery ends picking 3 winners', async () => {
-    });
+  describe("After all tickets sold", () => {
+    it("lottery ends picking 3 winners", async () => {});
 
-    it('lottery resets and new lottery start', async () => {
-    });
+    it("lottery resets and new lottery start", async () => {});
 
-    it('SuperJackpot is 10% of total', async () => {
-    });
+    it("SuperJackpot is 10% of total", async () => {});
   });
 
   // it("Transfer adds amount to destination account", async () => {
@@ -103,30 +92,22 @@ describe('Buying a ticket', () => {
   // });
 });
 
-describe('.retrieveLoot() should allow winners to withdraw funds', () => {
-  it('should only allow winners, otherwise revert', async () => {
-  });
+describe(".retrieveLoot() should allow winners to withdraw funds", () => {
+  it("should only allow winners, otherwise revert", async () => {});
 
-  it('winner claims prize should get sent the eth and winning balance updated to 0', async () => {
-  });
+  it("winner claims prize should get sent the eth and winning balance updated to 0", async () => {});
 
-  it('2 times winner claims prize should get sent both prices and winning balance updated to 0', async () => {
-  });
+  it("2 times winner claims prize should get sent both prices and winning balance updated to 0", async () => {});
 });
 
-describe('Events Emitted', () => {
-  it('After buying a ticket BoughtTicket event should be emitted', async () => {
-  });
+describe("Events Emitted", () => {
+  it("After buying a ticket BoughtTicket event should be emitted", async () => {});
 
-  it('After finishing lottery there should be 3 Winner events with all 3 winners', async () => {
-  });
+  it("After finishing lottery there should be 3 Winner events with all 3 winners", async () => {});
 
-  it('After withdrawing there should be a Withdrawal event emitted', async () => {
-  });
+  it("After withdrawing there should be a Withdrawal event emitted", async () => {});
 
-  it('After finishing a lottery and a new one startd a NewLotteryStarted event should be emitted', async () => {
-  });
+  it("After finishing a lottery and a new one startd a NewLotteryStarted event should be emitted", async () => {});
 
-  it('After finishing a lottery multiple of 15 SuperJackpot event should be emitted', async () => {
-  });
+  it("After finishing a lottery multiple of 15 SuperJackpot event should be emitted", async () => {});
 });

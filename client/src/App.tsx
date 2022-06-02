@@ -75,9 +75,12 @@ export default function App() {
     checkIfWalletIsConnected();
   }, []);
 
+  function handleClick(ticketNumber: number){
+    alert(`String text ${ticketNumber}`);
+  }
+
   return (
     <div className="mainContainer">
-
       <div className="dataContainer">
         <div className="header">
           Connected account:
@@ -86,6 +89,32 @@ export default function App() {
               currentAccount
           }
         </div>
+
+        <div className="grid-container">
+          <div className="box" onClick={() => handleClick(1)}>1</div>
+          <div className="box" onClick={() => handleClick(2)}>2</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+          <div className="box" onClick={() => handleClick(3)}>3</div>
+        </div>
+
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          {Array.from(Array(6)).map((_, index) => (
+            <Grid item xs={2} sm={4} md={4} key={index}>
+              <Item>xs=2</Item>
+            </Grid>
+          ))}
+        </Grid>
+
+
         <div>
         Sold Tickets:
         </div>
