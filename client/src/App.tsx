@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import './App.css';
 import { abi } from './utils/ProfitThePonzi.json';
 
@@ -7,33 +7,11 @@ export default function App() {
   const [currentAccount, setCurrentAccount] = useState('');
   const [soldTickets, setSoldTickets] = useState([]);
 
-  const checkIfWalletIsConnected = async () => {
-    try {
-      const { ethereum } = window;
 
-      if (!ethereum) {
-        console.log('Download Metamask!');
-      } else {
-        console.log('We have metamask!', ethereum);
-      }
-
-      const accounts = await ethereum.request({ method: 'eth_accounts' });
-
-      if (accounts.length !== 0) {
-        const account = accounts[0];
-        setCurrentAccount(account);
-        getTicketsSold()
-      } else {
-        console.log('No authorized account found');
-      }
-    } catch (error) {
-      console.log('error at getting account', error);
-    }
-  };
 
   const connectWallet = async () => {
     try {
-      const { ethereum } = window;
+      const { ethereum } = window as any;
 
       if (!ethereum) {
         alert('Get MetaMask!');
@@ -51,7 +29,7 @@ export default function App() {
 
   const getTicketsSold = async () => {
     try {
-      const { ethereum } = window;
+      const { ethereum } = window as any;
 
       if (ethereum) {
         // https://docs.ethers.io/v5/api/signer/#signers
@@ -60,7 +38,7 @@ export default function App() {
         const lotteryContract = new ethers.Contract('0x0856aec2139533B25B19F7DC08130A46f650C82e', abi, signer);
 
         const ticketsSold = await lotteryContract.getTicketsSold();
-        setSoldTickets(ticketsSold.filter(x => x.toNumber() !== 0));
+        setSoldTickets(ticketsSold.filter((x: BigNumber) => x.toNumber() !== 0));
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -70,6 +48,30 @@ export default function App() {
   };
 
   useEffect(() => {
+    const checkIfWalletIsConnected = async () => {
+      try {
+        const { ethereum } = window as any;
+  
+        if (!ethereum) {
+          console.log('Download Metamask!');
+        } else {
+          console.log('We have metamask!', ethereum);
+        }
+  
+        const accounts = await ethereum.request({ method: 'eth_accounts' });
+  
+        if (accounts.length !== 0) {
+          const account = accounts[0];
+          setCurrentAccount(account);
+          getTicketsSold();
+        } else {
+          console.log('No authorized account found');
+        }
+      } catch (error) {
+        console.log('error at getting account', error);
+      }
+    };
+
     checkIfWalletIsConnected();
   }, []);
 
@@ -85,8 +87,9 @@ export default function App() {
           }
         </div>
         <div>
-        Sold Tickets: {soldTickets.map(name => <h2>{name.toString()}</h2>)}
+        Sold Tickets:
         </div>
+        <ul>{soldTickets.map((x: BigNumber) => <li>{x.toString()}</li>)}</ul>
 
         <div className="bio">
           Hey my name is Fede :) try and wave me, you might get a surprise!
