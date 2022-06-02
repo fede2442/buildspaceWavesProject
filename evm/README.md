@@ -64,6 +64,10 @@ What is the address of the deployer in hardhat?
 
 https://hardhat.org/tutorial/testing-contracts.html
 
+issues between React and ESLint: (AWESOME ARTICLE)
+
+https://andrebnassis.medium.com/setting-eslint-on-a-react-typescript-project-2021-1190a43ffba
+
 ---
 Ideas for the lottery:
 

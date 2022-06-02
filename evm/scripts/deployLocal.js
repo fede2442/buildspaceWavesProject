@@ -6,22 +6,20 @@ const hre = require("hardhat");
 
 const main = async () => {
 	const [deployer] = await hre.ethers.getSigners();
-	const accountBalance = await deployer.getBalance();
 
-	console.log("Deploying account: ", deployer);
-	console.log("Account Balance: ", accountBalance.toString());
+	console.log("Deploying account: ", deployer.address);
 
-	const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
-	const waveContract = await waveContractFactory.deploy();
+	const lotteryContractFactory = await hre.ethers.getContractFactory("ProfitThePonzi");
+	const lotteryContract = await lotteryContractFactory.deploy();
 
-	await waveContract.deployed();
+	await lotteryContract.deployed();
 
-	console.log("WavePortal address: ", waveContract.address);
+	console.log("Lottery contract address: ", lotteryContract.address);
 
 	// Without callStatic we get a transaction as result of the contract call on-chain. This is a simulation of on-chain call.
-	const compare = await waveContract.callStatic.waveAndGuess(10);
+	const initialJackpot = await lotteryContract.callStatic.getJackpot();
 
-	console.log("resultado: ", compare);
+	console.log("Initial Jackpot: ", initialJackpot.toString());
 };
 
 const runMain = async () => {
