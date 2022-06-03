@@ -95,3 +95,4 @@ Progress images:
 ![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/3.JPG)
 ![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/4.JPG)
 ![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/5.JPG)
+![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/6.JPG)
