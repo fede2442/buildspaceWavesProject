@@ -40,6 +40,9 @@ OpenZepellin counters ---> https://docs.openzeppelin.com/contracts/3.x/api/utils
 
 Ethereum smart contracts good practices ---> https://consensys.github.io/smart-contract-best-practices/
 
+Commit/reveal schema --> https://medium.com/swlh/exploring-commit-reveal-schemes-on-ethereum-c4ff5a777db8#:~:text=The%20values%20in%20a%20commitment,understanding%2C%20consider%20this%20simplified%20visualization.
+
+Commit/reveal schema more doc ---> https://gitcoin.co/blog/commit-reveal-scheme-on-ethereum/
 
 Testing:
 
@@ -82,7 +85,7 @@ Ideas for the lottery:
     *Third --- 16%
     *SuperJackpot --- 10%
 - SuperJackpot winning not defined yet
-
+- Randomness with a commit/reveal schema.
 ---
 
 Progress images:
