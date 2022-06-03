@@ -1,23 +1,30 @@
 import { expect } from "chai";
-import { BigNumber, Signer } from "ethers";
+import {
+  BigNumber,
+  ContractReceipt,
+  ContractTransaction,
+  Signer,
+  Transaction,
+} from "ethers";
 import { ethers } from "hardhat";
 // eslint-disable-next-line node/no-missing-import
 import { BoughtTicketEvent } from "../typechain/ProfitThePonzi";
-import { ProfitThePonzi } from "../typechain/ProfitThePonzi";
+import { ProfitThePonzi, WinnerEvent } from "../typechain/ProfitThePonzi";
 
 // https://dev.to/open-wc/shared-behaviors-best-practices-with-mocha-519d#mocha-way
 // Awesome testing article: https://stermi.medium.com/how-to-create-tests-for-your-solidity-smart-contract-9fbbc4f0a319
-describe("Buying a ticket", () => {
+describe("Buying tickets and ownership", () => {
   let lottery: ProfitThePonzi;
   let owner: Signer;
   // eslint-disable-next-line no-unused-vars
   let buyerOne: Signer;
+  let buyerTwo: Signer;
   let ticketPriceInWei: string;
   let totalAmountOfTickets: number;
   let maxTicketsPerAccount: number;
 
   beforeEach(async () => {
-    [owner, buyerOne] = await ethers.getSigners();
+    [owner, buyerOne, buyerTwo] = await ethers.getSigners();
     ticketPriceInWei = "100000000000000000";
     totalAmountOfTickets = 10;
     maxTicketsPerAccount = 5;
@@ -153,6 +160,89 @@ describe("Buying a ticket", () => {
     it("SuperJackpot is 10% of total", async () => { });
   });
 
+  describe("Events Emitted", () => {
+    // it("Transfer emits event", async () => {
+    // 	await expect(lottery.transfer buyerOne.address, 7))
+    // 		.to.emit(lottery, "Transfer")
+    // 		.withArgs(wallet.address, buyerOne.address, 7);
+    // });
+
+    it("After buying a ticket BoughtTicket event should be emitted", async () => {
+      await expect(
+        await lottery.buyTicket(BigNumber.from(1), {
+          value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
+        })
+      )
+        .to.emit(lottery, "BoughtTicket")
+        .withArgs(0, await owner.getAddress(), 1);
+    });
+
+    it("After finishing lottery there should be 3 Winner events with all 3 winners", async () => {
+      buyTicketFor(1, owner);
+      buyTicketFor(2, owner);
+      buyTicketFor(3, owner);
+      buyTicketFor(4, owner);
+      buyTicketFor(8, owner);
+      buyTicketFor(6, buyerOne);
+      buyTicketFor(7, buyerTwo);
+      buyTicketFor(5, buyerOne);
+      buyTicketFor(9, buyerTwo);
+
+      const tx: ContractTransaction = await lottery
+        .connect(buyerTwo)
+        .buyTicket(BigNumber.from(10), {
+          value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
+        }); // 100ms
+      await tx.wait(); // 0ms, as tx is already confirmed
+      // const event = rc.events?.forEach((_event: any) => console.log(_event));
+      // const winner: string = event?.args;
+      // console.log("hola", event);
+
+      const filter1 = lottery.filters.Winner();
+      // const filter2 = lottery.connect(buyerOne).filters.Winner();
+
+      console.log({
+        address1: await owner.getAddress(),
+        address2: await buyerOne.getAddress(),
+        address3: await buyerTwo.getAddress(),
+      });
+
+      console.log(
+        (await lottery.queryFilter(filter1)).forEach((_event) =>
+          console.log("BUYEROWNER: ", _event.args)
+        )
+      );
+
+      // console.log(
+      //   (await lottery.queryFilter(filter2)).forEach((_event) =>
+      //     console.log("BUYERONE: ", _event.args)
+      //   )
+      // );
+
+      // await expect(
+      //   await lottery.buyTicket(BigNumber.from(totalAmountOfTickets), {
+      //     value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
+      //   })
+      // )
+      //   .to.emit(lottery, "Winner")
+      //   .withArgs(0, await owner.getAddress(), 1);
+    });
+
+    it("After withdrawing there should be a Withdrawal event emitted", async () => { });
+
+    it("After finishing a lottery and a new one startd a NewLotteryStarted event should be emitted", async () => { });
+
+    it("After finishing a lottery multiple of 15 SuperJackpot event should be emitted", async () => { });
+  });
+
+  describe(".retrieveLoot() should allow winners to withdraw funds", () => {
+    it("should only allow winners, otherwise revert", async () => { });
+
+    it("winner claims prize should get sent the eth and winning balance updated to 0", async () => { });
+
+    it("2 times winner claims prize should get sent both prices and winning balance updated to 0", async () => { });
+  });
+
   // it("Transfer adds amount to destination account", async () => {
   // 	await lottery.transfer buyerOne.address, 7);
   // 	expect(await lottery.balanceOf buyerOne.address)).to.equal(7);
@@ -183,24 +273,4 @@ describe("Buying a ticket", () => {
   // 	await lottery.balanceOf(wallet.address);
   // 	expect("balanceOf").to.be.calledOnContractWith(lottery, [wallet.address]);
   // });
-});
-
-describe(".retrieveLoot() should allow winners to withdraw funds", () => {
-  it("should only allow winners, otherwise revert", async () => { });
-
-  it("winner claims prize should get sent the eth and winning balance updated to 0", async () => { });
-
-  it("2 times winner claims prize should get sent both prices and winning balance updated to 0", async () => { });
-});
-
-describe("Events Emitted", () => {
-  it("After buying a ticket BoughtTicket event should be emitted", async () => { });
-
-  it("After finishing lottery there should be 3 Winner events with all 3 winners", async () => { });
-
-  it("After withdrawing there should be a Withdrawal event emitted", async () => { });
-
-  it("After finishing a lottery and a new one startd a NewLotteryStarted event should be emitted", async () => { });
-
-  it("After finishing a lottery multiple of 15 SuperJackpot event should be emitted", async () => { });
 });
