@@ -29,11 +29,17 @@ describe("Buying a ticket", () => {
     await lottery.deployed();
   });
 
-  // validations
-  it("Player should be able to purchase one ticket of choice", async () => {
-    await lottery.buyTicket(BigNumber.from(1), {
+  // UTILS FOR THIS SUITE
+  const buyTicketFor = async (ticketNumber: number, signer: Signer = owner) => {
+    await lottery.connect(signer).buyTicket(BigNumber.from(ticketNumber), {
       value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
     });
+  };
+
+  // validations
+  it("Player should be able to purchase one ticket of choice", async () => {
+    await buyTicketFor(1, owner);
+
     expect(await lottery.getJackpot()).to.equal(
       BigNumber.from(ticketPriceInWei)
     );
@@ -42,66 +48,102 @@ describe("Buying a ticket", () => {
 
   it("ticket number below or equal to 0 should revert InvalidTicketNumber", async () => {
     // eslint-disable-next-line no-unused-expressions
-    await expect(
-      lottery.buyTicket(BigNumber.from(0), {
-        value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-      })
-    ).to.be.revertedWith("InvalidTicketNumber()");
+    await expect(buyTicketFor(0, owner)).to.be.revertedWith(
+      "InvalidTicketNumber()"
+    );
   });
 
   it("ticket number over amountOfTickets should revert InvalidTicketNumber", async () => {
     await expect(
-      lottery.buyTicket(BigNumber.from(totalAmountOfTickets + 1), {
-        value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-      })
+      buyTicketFor(totalAmountOfTickets + 1, owner)
     ).to.be.revertedWith("InvalidTicketNumber()");
   });
 
   it("buying a ticket already aquired should revert LotteryNumberAlreadySold", async () => {
-    await lottery.buyTicket(BigNumber.from(1), {
-      value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-    });
+    buyTicketFor(1, owner);
 
-    await expect(
-      lottery.connect(buyerOne).buyTicket(BigNumber.from(1), {
-        value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-      })
-    ).to.be.revertedWith("LotteryNumberAlreadySold()");
+    await expect(buyTicketFor(1, buyerOne)).to.be.revertedWith(
+      "LotteryNumberAlreadySold()"
+    );
   });
 
   it("trying to buy more than 1 over the max tickets per account should revert with MaxAmountOfTickets", async () => {
     for (let i: number = 1; i <= maxTicketsPerAccount; i++) {
-      await lottery.buyTicket(BigNumber.from(i), {
-        value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-      });
+      buyTicketFor(i, owner);
     }
 
     await expect(
-      lottery.buyTicket(BigNumber.from(maxTicketsPerAccount + 1), {
-        value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-      })
+      buyTicketFor(maxTicketsPerAccount + 1, owner)
     ).to.be.revertedWith("MaxAmountOfTickets()");
   });
 
   it("not sending ticketPrice to buy a ticket should revert with AmountUnderMinBet()", async () => {
     await expect(
-      lottery.buyTicket(BigNumber.from(maxTicketsPerAccount + 1), {
+      lottery.buyTicket(BigNumber.from(1), {
         value: ethers.utils.parseUnits("1", "wei"),
-      })).to.be.revertedWith("AmountUnderMinBet()");
+      })
+    ).to.be.revertedWith("AmountUnderMinBet()");
   });
 
   // positive cases
-  it("Jackpot should be equal to (ticketsSold * ticketPrice)", async () => { });
+  it("Jackpot should be equal to (ticketsSold * ticketPrice)", async () => {
+    for (let i: number = 1; i <= maxTicketsPerAccount; i++) {
+      await buyTicketFor(i, owner);
+    }
+    const invesment: BigNumber = BigNumber.from(ticketPriceInWei).mul(
+      BigNumber.from(maxTicketsPerAccount)
+    );
 
-  it("buying a token makes the address the ticket Owner", async () => { });
+    await expect(await lottery.getJackpot()).to.eq(invesment);
+  });
 
-  it(".getTicketsBoughtBy(_owner) returns the tickets bought by _owner", async () => { });
+  it(".getTicketsBoughtBy(_owner) returns the tickets bought by _owner", async () => {
+    await buyTicketFor(1, owner);
+    await buyTicketFor(5, owner);
+    await buyTicketFor(8, owner);
 
-  it(".getTicketsSold() returns all sold tickets", async () => { });
+    const result: Array<BigNumber> = new Array(totalAmountOfTickets).fill(
+      BigNumber.from(0)
+    );
 
-  it(".buyerOfTicket(_ticketNumber) returns owner of _ticketNumber", async () => { });
+    result[0] = BigNumber.from(1);
+    result[4] = BigNumber.from(5);
+    result[7] = BigNumber.from(8);
 
-  it(".getJackpot() returns jackpot to earn in that lottery", async () => { });
+    expect(result).to.deep.eq(
+      await lottery.getTicketsBoughtBy(await owner.getAddress())
+    );
+  });
+
+  it(".getTicketsSold() returns all sold tickets", async () => {
+    await buyTicketFor(1, owner);
+    await buyTicketFor(5, owner);
+    await buyTicketFor(9, buyerOne);
+    await buyTicketFor(4, owner);
+    await buyTicketFor(7, buyerOne);
+
+    const result: Array<BigNumber> = new Array(totalAmountOfTickets).fill(
+      BigNumber.from(0)
+    );
+
+    result[0] = BigNumber.from(1);
+    result[4] = BigNumber.from(5);
+    result[8] = BigNumber.from(9);
+    result[3] = BigNumber.from(4);
+    result[6] = BigNumber.from(7);
+
+    expect(result).to.deep.eq(await lottery.getTicketsSold());
+  });
+
+  it(".buyerOfTicket(_ticketNumber) returns owner of _ticketNumber", async () => {
+    await buyTicketFor(1, owner);
+    await buyTicketFor(2, buyerOne);
+
+    expect(await lottery.buyerOfTicket(1)).to.eq(await owner.getAddress());
+    expect(await lottery.buyerOfTicket(1)).to.not.eq(
+      await buyerOne.getAddress()
+    );
+  });
 
   describe("After all tickets sold", () => {
     it("lottery ends picking 3 winners", async () => { });
