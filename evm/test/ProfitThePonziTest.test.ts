@@ -1,11 +1,5 @@
 import { expect } from "chai";
-import {
-  BigNumber,
-  ContractReceipt,
-  ContractTransaction,
-  Signer,
-  Transaction,
-} from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { ethers } from "hardhat";
 // eslint-disable-next-line node/no-missing-import
 import { BoughtTicketEvent } from "../typechain/ProfitThePonzi";
@@ -19,12 +13,13 @@ describe("Buying tickets and ownership", () => {
   // eslint-disable-next-line no-unused-vars
   let buyerOne: Signer;
   let buyerTwo: Signer;
+  let loserSigner: Signer;
   let ticketPriceInWei: string;
   let totalAmountOfTickets: number;
   let maxTicketsPerAccount: number;
 
   beforeEach(async () => {
-    [owner, buyerOne, buyerTwo] = await ethers.getSigners();
+    [owner, buyerOne, buyerTwo, loserSigner] = await ethers.getSigners();
     ticketPriceInWei = "100000000000000000";
     totalAmountOfTickets = 10;
     maxTicketsPerAccount = 5;
@@ -161,12 +156,6 @@ describe("Buying tickets and ownership", () => {
   });
 
   describe("Events Emitted", () => {
-    // it("Transfer emits event", async () => {
-    // 	await expect(lottery.transfer buyerOne.address, 7))
-    // 		.to.emit(lottery, "Transfer")
-    // 		.withArgs(wallet.address, buyerOne.address, 7);
-    // });
-
     it("After buying a ticket BoughtTicket event should be emitted", async () => {
       await expect(
         await lottery.buyTicket(BigNumber.from(1), {
@@ -188,57 +177,85 @@ describe("Buying tickets and ownership", () => {
       buyTicketFor(5, buyerOne);
       buyTicketFor(9, buyerTwo);
 
-      const tx: ContractTransaction = await lottery
-        .connect(buyerTwo)
-        .buyTicket(BigNumber.from(10), {
+      await expect(
+        await lottery.connect(buyerTwo).buyTicket(BigNumber.from(10), {
           value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-        }); // 100ms
-      await tx.wait(); // 0ms, as tx is already confirmed
-      // const event = rc.events?.forEach((_event: any) => console.log(_event));
-      // const winner: string = event?.args;
-      // console.log("hola", event);
-
-      const filter1 = lottery.filters.Winner();
-      // const filter2 = lottery.connect(buyerOne).filters.Winner();
-
-      console.log({
-        address1: await owner.getAddress(),
-        address2: await buyerOne.getAddress(),
-        address3: await buyerTwo.getAddress(),
-      });
-
-      console.log(
-        (await lottery.queryFilter(filter1)).forEach((_event) =>
-          console.log("BUYEROWNER: ", _event.args)
-        )
-      );
-
-      // console.log(
-      //   (await lottery.queryFilter(filter2)).forEach((_event) =>
-      //     console.log("BUYERONE: ", _event.args)
-      //   )
-      // );
-
-      // await expect(
-      //   await lottery.buyTicket(BigNumber.from(totalAmountOfTickets), {
-      //     value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
-      //   })
-      // )
-      //   .to.emit(lottery, "Winner")
-      //   .withArgs(0, await owner.getAddress(), 1);
+        })
+      )
+        .to.emit(lottery, "Winner")
+        .withArgs(0, await owner.getAddress(), "160000000000000000")
+        .and.to.emit(lottery, "Winner")
+        .withArgs(0, await buyerOne.getAddress(), "480000000000000000")
+        .and.to.emit(lottery, "Winner")
+        .withArgs(0, await buyerTwo.getAddress(), "260000000000000000");
     });
 
-    it("After withdrawing there should be a Withdrawal event emitted", async () => { });
+    it("After withdrawing there should be a Withdrawal event emitted", async () => {
+      buyTicketFor(1, owner);
+      buyTicketFor(2, owner);
+      buyTicketFor(3, owner);
+      buyTicketFor(4, owner);
+      buyTicketFor(8, owner);
+      buyTicketFor(6, buyerOne);
+      buyTicketFor(7, buyerTwo);
+      buyTicketFor(5, buyerOne);
+      buyTicketFor(9, buyerTwo);
+      buyTicketFor(10, buyerTwo);
 
-    it("After finishing a lottery and a new one startd a NewLotteryStarted event should be emitted", async () => { });
+      await expect(await lottery.connect(owner).retrieveLoot())
+        .to.emit(lottery, "Withdrawal")
+        .withArgs(await owner.getAddress(), "160000000000000000");
 
-    it("After finishing a lottery multiple of 15 SuperJackpot event should be emitted", async () => { });
+      await expect(await lottery.connect(buyerOne).retrieveLoot())
+        .to.emit(lottery, "Withdrawal")
+        .withArgs(await buyerOne.getAddress(), "480000000000000000");
+
+      await expect(await lottery.connect(buyerTwo).retrieveLoot())
+        .to.emit(lottery, "Withdrawal")
+        .withArgs(await buyerTwo.getAddress(), "260000000000000000");
+    });
+
+    it("After finishing a lottery and a new one startd a NewLotteryStarted event should be emitted", async () => {
+      buyTicketFor(1, owner);
+      buyTicketFor(2, owner);
+      buyTicketFor(3, owner);
+      buyTicketFor(4, owner);
+      buyTicketFor(8, owner);
+      buyTicketFor(6, buyerOne);
+      buyTicketFor(7, buyerTwo);
+      buyTicketFor(5, buyerOne);
+      buyTicketFor(9, buyerTwo);
+
+      await expect(
+        await lottery.connect(buyerTwo).buyTicket(BigNumber.from(10), {
+          value: ethers.utils.parseUnits(ticketPriceInWei, "wei"),
+        })
+      )
+        .to.emit(lottery, "NewLotteryStarted")
+        .withArgs(1);
+    });
   });
 
   describe(".retrieveLoot() should allow winners to withdraw funds", () => {
-    it("should only allow winners, otherwise revert", async () => { });
+    it("should only allow winners, otherwise revert", async () => {
+      buyTicketFor(1, owner);
+      buyTicketFor(2, owner);
+      buyTicketFor(3, owner);
+      buyTicketFor(4, owner);
+      buyTicketFor(8, owner);
+      buyTicketFor(6, buyerOne);
+      buyTicketFor(7, buyerTwo);
+      buyTicketFor(5, buyerOne);
+      buyTicketFor(9, buyerTwo);
+      buyTicketFor(10, buyerTwo);
 
-    it("winner claims prize should get sent the eth and winning balance updated to 0", async () => { });
+      await expect(
+        lottery.connect(loserSigner).retrieveLoot()
+      ).to.be.revertedWith("AccountIsNotAWinner()");
+    });
+
+    it("winner claims prize should get sent the eth and winning balance updated to 0", async () => {
+    });
 
     it("2 times winner claims prize should get sent both prices and winning balance updated to 0", async () => { });
   });
