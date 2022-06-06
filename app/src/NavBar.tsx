@@ -51,7 +51,7 @@ export default function NavBar() {
   }, []);
  
   return (
-    <Navbar className="max-w-screen-xl mx-auto bg-indigo-200">
+    <Navbar className="max-w-screen-xl mx-auto bg-indigo-200 my-3">
       <div className="container flex justify-between items-center text-blue-grey-900">
         <ul className="flex items-center gap-6">
           <Typography as="li" variant="small" className="p-3 font-normal cursor-pointer">

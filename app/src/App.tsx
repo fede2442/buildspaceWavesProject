@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Contract, ethers } from 'ethers';
+import { BigNumber, Contract, ethers } from 'ethers';
 import abi from './utils/ProfitThePonzi.json';
 import {ProfitThePonzi} from "./utils/typechain/ProfitThePonzi";
 import { Button } from '@material-tailwind/react';
 import NavBar from './NavBar';
 import ConfirmDialog from './ConfirmDialog';
+import TicketGrid from './ticketGrid';
+
+export enum TxStatus {
+  "STARTED",
+  "FINISHED",
+  "NOT_STARTED"
+}
 
 function App() {
-  const [soldTickets, setSoldTickets] = useState([]);
+  const [soldTickets, setSoldTickets] = useState(Array<BigNumber>());
   const [selectedTicket, setSelectedTicket] = useState(0);
   const [totalAmountOfTickets, setTotalAmountOfTickets] = useState(0);
   const [open, setOpen] = useState(false);
+  const [txStatus, setTxApproved] = useState(TxStatus.NOT_STARTED);
 
 
-  const getTicketsSold = async () => {
+  const loadTicketData = async () => {
     try {
       const { ethereum } = window as any;
 
@@ -23,8 +31,12 @@ function App() {
         const signer = provider.getSigner();
         const lotteryContract: ProfitThePonzi = (new ethers.Contract('0x0856aec2139533B25B19F7DC08130A46f650C82e', abi.abi, signer)) as ProfitThePonzi;
 
-        const totalTickets = await lotteryContract.amountOfTickets();
-        setTotalAmountOfTickets(totalTickets.toNumber());
+        const _soldTickets = await lotteryContract.getTicketsSold();
+        // const _totalTickets = await lotteryContract.amountOfTickets();
+        const _totalTickets = 10;
+
+        setTotalAmountOfTickets(_totalTickets);
+        setSoldTickets(_soldTickets);
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -34,7 +46,7 @@ function App() {
   };
 
   useEffect(() => {
-    getTicketsSold();
+    loadTicketData();
   },[open]);
 
   const buyTicket = async (ticketNumber: number) => {
@@ -46,7 +58,9 @@ function App() {
     const ticketsSold = await lotteryContract.buyTicket(selectedTicket, {
       value: ethers.utils.parseEther("0.1")
     });
+    setTxApproved(TxStatus.STARTED);
     await ticketsSold.wait();
+    setTxApproved(TxStatus.FINISHED);
     setOpen(!open)
   };
 
@@ -60,24 +74,24 @@ function App() {
   return (
     <div>
     <NavBar/>
-    <ConfirmDialog state={open} controlOpen={handleOpen} ticketSelected={selectedTicket} confirmAction={buyTicket}/>
+    <ConfirmDialog state={open} controlOpen={handleOpen} ticketSelected={selectedTicket} confirmAction={buyTicket} waitingTx={txStatus}/>
     <div className="flex justify-center w-full mt-1">
       <div className="flex flex-col">
+        {soldTickets.length === 0 ? 
+        <div className="text-center text-3xl font-semibold self-center mt-6">
+          Please connect your wallet
+        </div> 
+        : 
         <div className="text-center text-3xl font-semibold self-center mt-6">
           Pick a ticket number to buy:
-        </div>
+        </div>}
         <div className="">
-          <div className="grid grid-cols-5 grid-rows-10 gap-5 gap-x-20 mb-4 p-5 text-black">
-            {Array.from(Array(totalAmountOfTickets)).map((_, index) => (<Button variant="text"
-            className='border border-2 border-solid border-deep-purple-800' color='purple'
-            onClick={() => selectTicket(index + 1)}>{index + 1}</Button>))}
-          </div>
+          <TicketGrid totalAmount={10} soldTickets={soldTickets} selectTicket={selectTicket}/>
         </div>
       </div>
     </div>
     </div>
   );
 }
-
 
 export default App;
