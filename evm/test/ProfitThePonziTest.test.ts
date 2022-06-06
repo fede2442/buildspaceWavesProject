@@ -1,9 +1,7 @@
 import { expect } from "chai";
 import { BigNumber, Signer } from "ethers";
 import { ethers } from "hardhat";
-// eslint-disable-next-line node/no-missing-import
-import { BoughtTicketEvent } from "../typechain/ProfitThePonzi";
-import { ProfitThePonzi, WinnerEvent } from "../typechain/ProfitThePonzi";
+import { ProfitThePonzi } from "../typechain/ProfitThePonzi";
 
 // https://dev.to/open-wc/shared-behaviors-best-practices-with-mocha-519d#mocha-way
 // Awesome testing article: https://stermi.medium.com/how-to-create-tests-for-your-solidity-smart-contract-9fbbc4f0a319
@@ -254,40 +252,28 @@ describe("Buying tickets and ownership", () => {
       ).to.be.revertedWith("AccountIsNotAWinner()");
     });
 
-    it("winner claims prize should get sent the eth and winning balance updated to 0", async () => {
+    it("Same wallet can have two winning tickets", async () => {
+      buyTicketFor(1, owner);
+      buyTicketFor(2, owner);
+      buyTicketFor(3, owner);
+      buyTicketFor(4, owner);
+      buyTicketFor(6, owner);
+
+      buyTicketFor(5, buyerOne);
+      // two winning tickets for buyerOne
+      buyTicketFor(7, buyerOne);
+      buyTicketFor(8, buyerOne);
+      buyTicketFor(9, buyerOne);
+      buyTicketFor(10, buyerOne);
+
+      await expect(await lottery.connect(owner).retrieveLoot())
+        .to.emit(lottery, "Withdrawal")
+        .withArgs(await owner.getAddress(), "480000000000000000");
+
+      // 42.. wei == 16.. wei + 26... wei (price 2nd & 3rd)
+      await expect(await lottery.connect(buyerOne).retrieveLoot())
+        .to.emit(lottery, "Withdrawal")
+        .withArgs(await buyerOne.getAddress(), "420000000000000000");
     });
-
-    it("2 times winner claims prize should get sent both prices and winning balance updated to 0", async () => { });
   });
-
-  // it("Transfer adds amount to destination account", async () => {
-  // 	await lottery.transfer buyerOne.address, 7);
-  // 	expect(await lottery.balanceOf buyerOne.address)).to.equal(7);
-  // });
-
-  // it("Transfer emits event", async () => {
-  // 	await expect(lottery.transfer buyerOne.address, 7))
-  // 		.to.emit(lottery, "Transfer")
-  // 		.withArgs(wallet.address, buyerOne.address, 7);
-  // });
-
-  // it("Can not transfer above the amount", async () => {
-  // 	await expect(lottery.transfer buyerOne.address, 1007)).to.be.reverted;
-  // });
-
-  // it("Can not transfer from empty account", async () => {
-  // 	const lotteryFromOtherWallet = lottery.connect buyerOne);
-  // 	await expect(lotteryFromOtherWallet.transfer(wallet.address, 1))
-  // 		.to.be.reverted;
-  // });
-
-  // it("Calls totalSupply on ProfitThePonzi contract", async () => {
-  // 	await lottery.totalSupply();
-  // 	expect("totalSupply").to.be.calledOnContract(lottery);
-  // });
-
-  // it("Calls balanceOf with sender address on ProfitThePonzi contract", async () => {
-  // 	await lottery.balanceOf(wallet.address);
-  // 	expect("balanceOf").to.be.calledOnContractWith(lottery, [wallet.address]);
-  // });
 });

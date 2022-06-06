@@ -12,6 +12,7 @@ contract ProfitThePonzi {
     using Counters for Counters.Counter;
     
     uint256 public constant amountOfTickets = 10;
+    uint256 public constant ticketPrice = 0.1 ether;
     address[amountOfTickets] public ticketOwners; 
     Counters.Counter public soldTicketsCounter;  
     Counters.Counter public lotteryId;  
@@ -45,7 +46,7 @@ contract ProfitThePonzi {
         if(_ticketNumber <= 0 || _ticketNumber > amountOfTickets) revert InvalidTicketNumber();
         if(ticketOwners[_ticketNumber - 1] != address(0)) revert LotteryNumberAlreadySold();
         if(!canBuyMore(msg.sender)) revert MaxAmountOfTickets();
-        if(msg.value != 0.1 ether) revert AmountUnderMinBet();
+        if(msg.value != ticketPrice) revert AmountUnderMinBet();
 
         jackpot += msg.value;       
         ticketOwners[_ticketNumber - 1] = msg.sender;

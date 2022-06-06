@@ -54,23 +54,23 @@ export default function NavBar() {
     <Navbar className="max-w-screen-xl mx-auto bg-indigo-200">
       <div className="container flex justify-between items-center text-blue-grey-900">
         <ul className="flex items-center gap-6">
-          <Typography as="li" variant="small" className="p-1 font-normal cursor-pointer">
+          <Typography as="li" variant="small" className="p-3 font-normal cursor-pointer">
             <a className="flex items-center">About&nbsp;</a>
           </Typography>
-          <Typography as="li" variant="small" className="p-1 font-normal cursor-pointer">
+          <Typography as="li" variant="small" className="p-3 font-normal cursor-pointer">
             <a className="flex items-center">Rules&nbsp;</a>
           </Typography>
         </ul>
        {connectedAccount === "" ?
-         <Button variant="gradient" size="md" onClick={connectWallet}>
+         <Button variant="outlined" size="md" color="indigo" onClick={connectWallet}>
           Connect Wallet
         </Button> :         
         <Typography
           as="a"
           variant="small"
-          className="py-1.5 mr-4 font-bold"
+          className="py-1.5 mr-4 font-bold border border-1 border-indigo-300 p-5 rounded-md"
         >
-          {connectedAccount == "" ? "Please Connect Wallet" : connectedAccount}
+          {connectedAccount}
         </Typography>}
       </div>
     </Navbar>
