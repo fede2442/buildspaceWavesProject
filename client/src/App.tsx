@@ -49,12 +49,13 @@ export default function App() {
 
   const handleClick = async (ticketNumber: number) => {
     const { ethereum } = window as any;
-    alert(`String text ${ticketNumber}`);
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const lotteryContract: Contract = new ethers.Contract('0x0856aec2139533B25B19F7DC08130A46f650C82e', abi, signer);
 
-    const ticketsSold = await lotteryContract.buyTicket(ticketNumber);
+    const ticketsSold = await lotteryContract.buyTicket(ticketNumber, {
+      value: ethers.utils.parseEther('0.1')
+    });
     await ticketsSold.wait();
     alert("Ticket number sold");
   };
