@@ -1,4 +1,5 @@
 import { Button } from '@material-tailwind/react';
+import { useState, useEffect } from 'react';
 
 export default function TicketGrid(props) {
   

@@ -58,6 +58,10 @@ Frontend / React / CSS
 
 - Tailwind fast pro tutorial: https://www.youtube.com/watch?v=pfaSUYaSgRo
 
+- Tailwind doc: https://tailwindcss.com/docs/animation#spin
+
+- tailwind elements: https://tailwind-elements.com/docs
+
 Some issues found along the way: 
 
 Having a the client inside the repo with it's .git made the original repo not follow the subrepo.
@@ -101,3 +105,5 @@ Progress images:
 ![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/4.JPG)
 ![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/5.JPG)
 ![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/6.JPG)
+![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/7.JPG)
+![alt text](https://github.com/fede2442/buildspaceWavesProject/blob/main/evm/ScreenShots/8.JPG)
