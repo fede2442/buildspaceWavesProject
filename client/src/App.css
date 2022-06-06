@@ -1,7 +1,12 @@
-.mainContainer {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* .mainContainer {
   display: flex;
   justify-content: center;
   width: 100%;
+  height: 600px;
   margin-top: 64px;
 }
 
@@ -9,7 +14,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 600px;
+  width: fit-content;
 }
 
 .header {
@@ -34,11 +39,10 @@
 
 .grid-container {
   display: grid; 
-  grid-auto-columns: 1fr 1fr; 
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
-  grid-template-rows: 8fr 8fr 8fr 8fr 8fr 8fr 8fr 8fr 8fr 8fr; 
-  gap: 5px 5px; 
+  width: 400px; 
+  gap: 10px 10px;
   border-width: 5px;
+  height: 400px;
   grid-template-areas: 
     ". . . . ."
     ". . . . ."
@@ -53,10 +57,10 @@
 }
 
 .box{
-  background-color: white;
   text-align: center;
   border: 2px solid black;
   border-radius: 5px;
-  height: 20px;
+  height: 100%;
+  width: 100%;
 
-}
+}  */
