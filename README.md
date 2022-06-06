@@ -52,6 +52,11 @@ Testing:
 
 - Gas reporter ---> https://www.npmjs.com/package/hardhat-gas-reporter
 
+Frontend / React / CSS
+
+- Good CSS practices: https://paulcpederson.com/articles/css-for-people-who-hate-css/
+
+- Tailwind fast pro tutorial: https://www.youtube.com/watch?v=pfaSUYaSgRo
 
 Some issues found along the way: 
 
