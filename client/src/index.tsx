@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import './style.css';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<div className='text-3xl bg-black'>Hello World</div>, document.getElementById('root'));

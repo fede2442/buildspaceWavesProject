@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BigNumber, Contract, ethers } from 'ethers';
 import { abi } from './utils/ProfitThePonzi.json';
-
+import './style.css';
 
 export default function App() {
   const [currentAccount, setCurrentAccount] = useState('');
@@ -99,7 +99,7 @@ export default function App() {
           }
         </div>
 
-        <div className="grid-container">
+        <div className="">
           {Array.from(Array(50)).map((_, index) => (<div className="text-center rounded h-full w-full" onClick={() => handleClick(index)}>{index}</div>))}
         </div>
 
