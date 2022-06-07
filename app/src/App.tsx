@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { BigNumber, Contract, ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import abi from './utils/ProfitThePonzi.json';
 import {ProfitThePonzi} from "./utils/typechain/ProfitThePonzi";
 import NavBar from './NavBar';
 import ConfirmDialog from './ConfirmDialog';
 import TicketGrid from './ticketGrid';
-import { Button, Popover, PopoverContent, PopoverHandler } from '@material-tailwind/react';
+import { Button } from '@material-tailwind/react';
 
 export enum TxStatus {
   "STARTED",
@@ -58,8 +58,11 @@ function App() {
     const ticketsSold = await lotteryContract.buyTicket(selectedTicket, {
       value: ethers.utils.parseEther("0.1")
     });
+    // Confirm metamask
     setBuyTxApproved(TxStatus.STARTED);
+    // wait till transaction goes through
     await ticketsSold.wait();
+    // Tx is confirmed
     setBuyTxApproved(TxStatus.FINISHED);
     setOpen(!open)
   };
