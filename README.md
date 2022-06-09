@@ -1,6 +1,6 @@
-# BuildSpace waves project (modified)
+# ProfitThePonzi - Decentralized lottery game
 
-This is my try at buildspace's first project after finishing a solidity bootcamp.
+This is my try at buildspace's first project after finishing a solidity bootcamp at Encode academy, following buildspace web3 tutorial but making a personal idea.
 
 
 
