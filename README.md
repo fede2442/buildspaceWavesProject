@@ -62,6 +62,9 @@ Frontend / React / CSS
 
 - tailwind elements: https://tailwind-elements.com/docs
 
+- React vs Next.js: https://snipcart.com/blog/next-js-vs-react
+
+
 Some issues found along the way: 
 
 Having a the client inside the repo with it's .git made the original repo not follow the subrepo.

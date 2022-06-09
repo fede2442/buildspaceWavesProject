@@ -106,7 +106,7 @@ function App() {
         {isWinner && <div>
         Retrieve Loot: <Button variant="gradient" onClick={retrieveLoot}>Take loot</Button>
         </div>}
-      </div>
+      </div> 
     </div>
     </div>
   );
