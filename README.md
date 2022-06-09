@@ -2,9 +2,10 @@
 
 This is my try at buildspace's first project after finishing a solidity bootcamp.
 
-Heroku URL deployed: https://buildspace-waves-app.herokuapp.com/
 
-First rinkeby deploy :) : [https://rinkeby.etherscan.io/address/0x7068d74E67AEC8aa72aB08E2699aa23D0086D825](https://rinkeby.etherscan.io/address/0x0856aec2139533B25B19F7DC08130A46f650C82e)
+
+First rinkeby deploy :) : https://rinkeby.etherscan.io/address/0x0856aec2139533B25B19F7DC08130A46f650C82e
+
 
 ---
 
