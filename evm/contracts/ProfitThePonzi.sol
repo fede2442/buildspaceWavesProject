@@ -152,6 +152,7 @@ contract ProfitThePonzi {
     // TODO: Modify later on to get a real random number. Possibly use chainlink VRF. Now it's a pseudorandom.
     function getRandomToGuess() internal pure returns (uint256){
         //return (block.difficulty / block.number) % 10;
+    //    uint(keccak256(abi.encodePacked(ticketOwners))) % 100;
         return 5;
     }
 

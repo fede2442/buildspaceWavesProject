@@ -1,5 +1,7 @@
 {
 	"eslint.alwaysShowStatus": false,
 	"eslint.codeActionsOnSave.mode": true,
-	"eslint.validate": ["javascript"]
+	"eslint.validate": [
+		"javascript"
+	]
 }

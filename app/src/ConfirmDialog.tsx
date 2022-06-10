@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { TxStatus } from './App';
+import { TxStatus } from './pages/HomePage';
 import {
   Dialog,
   DialogHeader,

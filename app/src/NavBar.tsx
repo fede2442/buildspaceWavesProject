@@ -1,5 +1,6 @@
 import { Navbar, Button, Typography } from "@material-tailwind/react";
 import {useEffect, useState} from 'react';
+import { Link } from "react-router-dom";
 
 
 export default function NavBar() {
@@ -55,11 +56,10 @@ export default function NavBar() {
       <div className="container flex justify-between items-center text-blue-grey-900">
         <ul className="flex items-center gap-6">
           <Typography as="li" variant="small" className="p-3 font-normal cursor-pointer">
-            {/* <a className="flex items-center">About&nbsp;</a> */}
-            <button  onClick={() => console.log("do smth")}>  About&nbsp;</button>
+              <Link to="/"> Home&nbsp;</Link>
           </Typography>
           <Typography as="li" variant="small" className="p-3 font-normal cursor-pointer">
-            <a className="flex items-center">Rules&nbsp;</a>
+              <Link to="/about"> About&nbsp;</Link>
           </Typography>
         </ul>
        {connectedAccount === "" ?

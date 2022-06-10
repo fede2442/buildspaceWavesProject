@@ -1,8 +1,9 @@
 import React from 'react';
+import NavBar from '../NavBar';
  
 function About () {
     return <div>
-        <h2>GeeksforGeeks is a computer science portal for geeks!</h2>
+        <NavBar/>
     </div>
 }
 export default About;

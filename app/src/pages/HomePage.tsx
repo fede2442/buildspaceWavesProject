@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { BigNumber, ethers } from 'ethers';
-import abi from './utils/ProfitThePonzi.json';
-import {ProfitThePonzi} from "./utils/typechain/ProfitThePonzi";
-import NavBar from './NavBar';
-import ConfirmDialog from './ConfirmDialog';
-import TicketGrid from './ticketGrid';
+import abi from '../utils/ProfitThePonzi.json';
+import {ProfitThePonzi} from "../utils/typechain/ProfitThePonzi";
+import NavBar from '../NavBar';
+import ConfirmDialog from '../ConfirmDialog';
+import TicketGrid from '../ticketGrid';
 import { Button } from '@material-tailwind/react';
 
 export enum TxStatus {
