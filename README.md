@@ -1,7 +1,6 @@
 # ProfitThePonzi - Decentralized lottery game
 
-This is my try at buildspace's first project after finishing a solidity bootcamp at Encode academy, following buildspace web3 tutorial but making a personal idea.
-
+This is my try at buildspace's first project after finishing a solidity bootcamp at Encode academy.
 
 
 First rinkeby deploy :) : https://rinkeby.etherscan.io/address/0x0856aec2139533B25B19F7DC08130A46f650C82e
