@@ -6,6 +6,7 @@ import NavBar from '../components/NavBar';
 import ConfirmDialog from '../components/ConfirmDialog';
 import TicketGrid from '../components/TicketGrid';
 import { Button } from '@material-tailwind/react';
+import Footer from '../components/Footer';
 
 export enum TxStatus {
   "STARTED",
@@ -108,6 +109,7 @@ function App() {
         </div>}
       </div> 
     </div>
+      <Footer/>
     </div>
   );
 }
