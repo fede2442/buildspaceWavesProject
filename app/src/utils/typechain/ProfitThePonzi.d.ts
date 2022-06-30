@@ -35,6 +35,7 @@ interface ProfitThePonziInterface extends ethers.utils.Interface {
     "soldTicketsCounter()": FunctionFragment;
     "superJackpot()": FunctionFragment;
     "ticketOwners(uint256)": FunctionFragment;
+    "ticketPrice()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -87,6 +88,10 @@ interface ProfitThePonziInterface extends ethers.utils.Interface {
     functionFragment: "ticketOwners",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "ticketPrice",
+    values?: undefined
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "amountOfTickets",
@@ -130,6 +135,10 @@ interface ProfitThePonziInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "ticketOwners",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "ticketPrice",
     data: BytesLike
   ): Result;
 
@@ -326,6 +335,8 @@ export class ProfitThePonzi extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    ticketPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   amountOfTickets(overrides?: CallOverrides): Promise<BigNumber>;
@@ -395,6 +406,8 @@ export class ProfitThePonzi extends BaseContract {
 
   ticketOwners(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
+  ticketPrice(overrides?: CallOverrides): Promise<BigNumber>;
+
   callStatic: {
     amountOfTickets(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -463,6 +476,8 @@ export class ProfitThePonzi extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    ticketPrice(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
@@ -585,6 +600,8 @@ export class ProfitThePonzi extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    ticketPrice(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -636,5 +653,7 @@ export class ProfitThePonzi extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    ticketPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

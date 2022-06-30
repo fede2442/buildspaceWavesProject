@@ -52,13 +52,13 @@ export default function NavBar() {
   }, []);
  
   return (
-    <Navbar className="max-w-screen-xl mx-auto bg-indigo-200 my-3">
+    <Navbar className="max-w-screen-xl mx-auto bg-indigo-400 my-3">
       <div className="container flex justify-between items-center text-blue-grey-900">
         <ul className="flex items-center gap-6">
-          <Typography as="li" variant="small" className="p-3 font-normal cursor-pointer">
+          <Typography as="li" variant="xl" className="font-bold shadow-sm cursor-pointer hover:text-white py-2 px-4 rounded">
               <Link to="/"> Home&nbsp;</Link>
           </Typography>
-          <Typography as="li" variant="small" className="p-3 font-normal cursor-pointer">
+          <Typography as="li" variant="xl" className="font-bold shadow-sm cursor-pointer hover:text-white py-2 px-4 rounded">
               <Link to="/about"> About&nbsp;</Link>
           </Typography>
         </ul>
@@ -69,9 +69,9 @@ export default function NavBar() {
         <Typography
           as="a"
           variant="small"
-          className="py-1.5 mr-4 font-bold border border-1 border-indigo-300 p-5 rounded-md"
+          className="py-1.5 mr-4 font-bold border border-1 border-indigo-400 p-5 rounded-md"
         >
-          {connectedAccount}
+          {connectedAccount.slice(0,5) + "..." + connectedAccount.slice(connectedAccount.length-4,connectedAccount.length)}
         </Typography>}
       </div>
       

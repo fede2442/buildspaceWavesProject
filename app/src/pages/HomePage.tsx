@@ -88,7 +88,7 @@ function App() {
   const handleOpen = (value) => setOpen(!open);
 
   return (
-    <div>
+    <div >
     <NavBar/>
     <ConfirmDialog state={open} controlOpen={handleOpen} ticketSelected={selectedTicket} confirmAction={buyTicket} waitingTx={buyTxStatus}/>
     <div className="flex justify-center w-full mt-1">
