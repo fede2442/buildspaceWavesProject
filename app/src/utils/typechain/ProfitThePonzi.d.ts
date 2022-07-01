@@ -11,6 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
+  Overrides,
   PayableOverrides,
   CallOverrides,
 } from "ethers";
@@ -31,7 +32,10 @@ interface ProfitThePonziInterface extends ethers.utils.Interface {
     "jackpot()": FunctionFragment;
     "lotteryId()": FunctionFragment;
     "pendingWinners(address)": FunctionFragment;
+    "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
     "retrieveLoot()": FunctionFragment;
+    "s_randomWords(uint256)": FunctionFragment;
+    "s_requestId()": FunctionFragment;
     "soldTicketsCounter()": FunctionFragment;
     "superJackpot()": FunctionFragment;
     "ticketOwners(uint256)": FunctionFragment;
@@ -73,7 +77,19 @@ interface ProfitThePonziInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "rawFulfillRandomWords",
+    values: [BigNumberish, BigNumberish[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "retrieveLoot",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_randomWords",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_requestId",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -122,7 +138,19 @@ interface ProfitThePonziInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "rawFulfillRandomWords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "retrieveLoot",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "s_randomWords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "s_requestId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -249,64 +277,16 @@ export class ProfitThePonzi extends BaseContract {
       _owner: string,
       overrides?: CallOverrides
     ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ] & {
-        _tickets: [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ];
+      [[BigNumber, BigNumber, BigNumber, BigNumber]] & {
+        _tickets: [BigNumber, BigNumber, BigNumber, BigNumber];
       }
     >;
 
     getTicketsSold(
       overrides?: CallOverrides
     ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ] & {
-        _tickets: [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ];
+      [[BigNumber, BigNumber, BigNumber, BigNumber]] & {
+        _tickets: [BigNumber, BigNumber, BigNumber, BigNumber];
       }
     >;
 
@@ -321,9 +301,22 @@ export class ProfitThePonzi extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    rawFulfillRandomWords(
+      requestId: BigNumberish,
+      randomWords: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     retrieveLoot(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    s_randomWords(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    s_requestId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     soldTicketsCounter(
       overrides?: CallOverrides
@@ -358,37 +351,11 @@ export class ProfitThePonzi extends BaseContract {
   getTicketsBoughtBy(
     _owner: string,
     overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber]>;
 
   getTicketsSold(
     overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber]>;
 
   jackpot(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -396,9 +363,22 @@ export class ProfitThePonzi extends BaseContract {
 
   pendingWinners(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  rawFulfillRandomWords(
+    requestId: BigNumberish,
+    randomWords: BigNumberish[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   retrieveLoot(
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  s_randomWords(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  s_requestId(overrides?: CallOverrides): Promise<BigNumber>;
 
   soldTicketsCounter(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -428,37 +408,11 @@ export class ProfitThePonzi extends BaseContract {
     getTicketsBoughtBy(
       _owner: string,
       overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber]>;
 
     getTicketsSold(
       overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber]>;
 
     jackpot(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -466,7 +420,20 @@ export class ProfitThePonzi extends BaseContract {
 
     pendingWinners(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    rawFulfillRandomWords(
+      requestId: BigNumberish,
+      randomWords: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     retrieveLoot(overrides?: CallOverrides): Promise<void>;
+
+    s_randomWords(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_requestId(overrides?: CallOverrides): Promise<BigNumber>;
 
     soldTicketsCounter(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -588,9 +555,22 @@ export class ProfitThePonzi extends BaseContract {
 
     pendingWinners(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    rawFulfillRandomWords(
+      requestId: BigNumberish,
+      randomWords: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     retrieveLoot(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    s_randomWords(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_requestId(overrides?: CallOverrides): Promise<BigNumber>;
 
     soldTicketsCounter(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -639,9 +619,22 @@ export class ProfitThePonzi extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    rawFulfillRandomWords(
+      requestId: BigNumberish,
+      randomWords: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     retrieveLoot(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    s_randomWords(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    s_requestId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     soldTicketsCounter(
       overrides?: CallOverrides

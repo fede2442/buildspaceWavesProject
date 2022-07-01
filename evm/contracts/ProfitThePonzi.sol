@@ -173,10 +173,6 @@ contract ProfitThePonzi is VRFConsumerBaseV2{
         }
     }
 
-    function getJackpot() public view returns(uint256){
-        return jackpot;
-    }
-
     function getContractBalance() public view returns(uint256){
         return address(this).balance;
     }

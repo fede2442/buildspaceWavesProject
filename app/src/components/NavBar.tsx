@@ -55,11 +55,18 @@ export default function NavBar() {
     <Navbar className="max-w-screen-xl mx-auto bg-indigo-400 my-3">
       <div className="container flex justify-between items-center text-blue-grey-900">
         <ul className="flex items-center gap-6">
-          <Typography as="li" variant="xl" className="font-bold shadow-sm cursor-pointer hover:text-white py-2 px-4 rounded">
-              <Link to="/"> Home&nbsp;</Link>
+          <Typography as="li" variant="xl" >
+          <Link to="/">
+            <div className="font-bold shadow-sm cursor-pointer hover:text-white py-2 px-4 rounded">
+              Home&nbsp;
+            </div></Link>
           </Typography>
-          <Typography as="li" variant="xl" className="font-bold shadow-sm cursor-pointer hover:text-white py-2 px-4 rounded">
-              <Link to="/about"> About&nbsp;</Link>
+          <Typography as="li" variant="xl">
+            <Link to="/about">
+              <div className="font-bold shadow-sm cursor-pointer hover:text-white py-2 px-4 rounded">
+                About&nbsp;
+                </div>
+            </Link>
           </Typography>
         </ul>
        {connectedAccount === "" ?

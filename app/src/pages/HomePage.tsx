@@ -30,7 +30,7 @@ function App() {
         // https://docs.ethers.io/v5/api/signer/#signers
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const lotteryContract: ProfitThePonzi = (new ethers.Contract('0x0856aec2139533B25B19F7DC08130A46f650C82e', abi.abi, signer)) as ProfitThePonzi;
+        const lotteryContract: ProfitThePonzi = (new ethers.Contract('0x9385556b571ab92bf6dc9a0dbd75429dd4d56f91', abi.abi, signer)) as ProfitThePonzi;
 
         const _soldTickets = await lotteryContract.getTicketsSold();
         const _totalTickets = await lotteryContract.amountOfTickets();
@@ -54,10 +54,10 @@ function App() {
     const { ethereum } = window as any;
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const lotteryContract: ProfitThePonzi = (new ethers.Contract('0x0856aec2139533B25B19F7DC08130A46f650C82e', abi.abi, signer)) as ProfitThePonzi;
+    const lotteryContract: ProfitThePonzi = (new ethers.Contract('0x9385556b571ab92bf6dc9a0dbd75429dd4d56f91', abi.abi, signer)) as ProfitThePonzi;
 
     const ticketsSold = await lotteryContract.buyTicket(selectedTicket, {
-      value: ethers.utils.parseEther("0.1")
+      value: ethers.utils.parseEther("0.01")
     });
     // Confirm metamask
     setBuyTxApproved(TxStatus.STARTED);
@@ -72,7 +72,7 @@ function App() {
     const { ethereum } = window as any;
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const lotteryContract: ProfitThePonzi = (new ethers.Contract('0x0856aec2139533B25B19F7DC08130A46f650C82e', abi.abi, signer)) as ProfitThePonzi;
+    const lotteryContract: ProfitThePonzi = (new ethers.Contract('0x9385556b571ab92bf6dc9a0dbd75429dd4d56f91', abi.abi, signer)) as ProfitThePonzi;
 
     const retievedLoot = await lotteryContract.retrieveLoot();
     

@@ -10,8 +10,8 @@ export default function AboutAccordion() {
     
   return (
         <Fragment >
-            <Accordion open={open === 1} onClick={() => handleOpen(1)}>
-                <AccordionHeader className="text-black">What is Profit The Ponzi?</AccordionHeader>
+            <Accordion  open={open === 1} onClick={() => handleOpen(1)}>
+                <AccordionHeader className="text-black ">What is Profit The Ponzi?</AccordionHeader>
                 <AccordionBody className="text-black">
                     Profit The Ponzi is a basic decentralized lottery game. This was a project made just for learning and fun. Please be careful with which wallet you connect and make sure you are on Rinkeby testnet to play. This is a test application!. This UI is for people to be able to play easily but the contract is designed to be played without a UI.
                 </AccordionBody>
