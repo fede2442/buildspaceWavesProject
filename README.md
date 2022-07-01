@@ -44,6 +44,12 @@ Commit/reveal schema --> https://medium.com/swlh/exploring-commit-reveal-schemes
 
 Commit/reveal schema more doc ---> https://gitcoin.co/blog/commit-reveal-scheme-on-ethereum/
 
+Chainlink ----> https://docs.chain.link/docs/chainlink-vrf/
+
+TestingChainlink ----> https://dev.to/abhikbanerjee99/testing-your-chainlink-vrf-powered-smart-contract-m3i
+
+Mocking chainlink oracles ---> https://betterprogramming.pub/how-to-mock-chainlink-vrf-coordinator-v2-and-aggregator-v3-with-truffle-0-8-0-24353b96858e
+
 Testing:
 
 - Awesome article testing solidity: https://stermi.medium.com/how-to-create-tests-for-your-solidity-smart-contract-9fbbc4f0a319

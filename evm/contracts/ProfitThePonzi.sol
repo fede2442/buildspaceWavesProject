@@ -4,15 +4,37 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "hardhat/console.sol";
-
+import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
 //https://consensys.github.io/smart-contract-best-practices/
-contract ProfitThePonzi {
+//https://docs.chain.link/docs/chainlink-vrf/example-contracts/
+contract ProfitThePonzi is VRFConsumerBaseV2{
     // https://docs.openzeppelin.com/contracts/3.x/api/utils#Counters
     using Counters for Counters.Counter;
+    VRFCoordinatorV2Interface COORDINATOR;
+
+    uint64 s_subscriptionId;
+
+    // Rinkeby coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0x6168499c0cFfCaCD319c818142124B7A15E857ab;
     
-    uint256 public constant amountOfTickets = 10;
-    uint256 public constant ticketPrice = 0.1 ether;
+    // The gas lane to use, which specifies the maximum gas price to bump to.
+    // For a list of available gas lanes on each network,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    bytes32 keyHash = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
+
+    // will ahve to be high enough to end a lottery and start a new one ?
+    uint32 callbackGasLimit = 2000000;
+
+    // The default is 3, but you can set this higher.
+    uint16 requestConfirmations = 3;
+
+    uint256[] public s_randomWords;
+    uint256 public s_requestId;
+    uint256 public constant amountOfTickets = 4;
+    uint256 public constant ticketPrice = 0.01 ether;
     address[amountOfTickets] public ticketOwners; 
     Counters.Counter public soldTicketsCounter;  
     Counters.Counter public lotteryId;  
@@ -20,6 +42,11 @@ contract ProfitThePonzi {
     uint256 public jackpot;
     uint256 public superJackpot;
     mapping(address => uint256) public pendingWinners; 
+
+    constructor(uint64 subscriptionId ) VRFConsumerBaseV2(vrfCoordinator) {
+        COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
+        s_subscriptionId = subscriptionId;
+    }
 
     modifier onlyWinners()
     {
@@ -54,21 +81,22 @@ contract ProfitThePonzi {
 
         emit BoughtTicket(lotteryId.current(), msg.sender, _ticketNumber);
 
+        // request the random number from ChainLink once all tickets are sold.
         if(soldTicketsCounter.current() == amountOfTickets){
-            endLottery();
+            requestRandomWords();
         }
     }
 
-    function endLottery() internal {
-        uint256 winnerTicketOne = getRandomToGuess();
-        uint256 winnerTicketTwo = winnerTicketOne + 1;
-        uint256 winnerTicketThree = winnerTicketTwo + 1;
+    function endLottery(uint256[] memory randomNumber) internal {
+        uint256 winnerTicketOne = (randomNumber[0] % amountOfTickets) + 1;
+        uint256 winnerTicketTwo = (randomNumber[1] % amountOfTickets) + 1;
+        uint256 winnerTicketThree = (randomNumber[2] % amountOfTickets) + 1;
 
-        // every 15 lotteries we play for the superJackpot
-        if(lotteryId.current() % 15 == 0){
-            jackpot += (superJackpot * 9 / 10);
-            superJackpot = superJackpot * 1 / 10;
-            emit SuperJackpot(lotteryId.current(), superJackpot * 9 / 10);
+        // every 5 lotteries we play for the superJackpot
+        if(lotteryId.current() % 5 == 0){
+            jackpot += superJackpot;
+            superJackpot = 0;
+            emit SuperJackpot(lotteryId.current(), jackpot);
         }
 
         pendingWinners[ticketOwners[winnerTicketOne]] += (jackpot * 24 / 50); // 48%
@@ -149,14 +177,26 @@ contract ProfitThePonzi {
         return jackpot;
     }
 
-    // TODO: Modify later on to get a real random number. Possibly use chainlink VRF. Now it's a pseudorandom.
-    function getRandomToGuess() internal pure returns (uint256){
-        //return (block.difficulty / block.number) % 10;
-    //    uint(keccak256(abi.encodePacked(ticketOwners))) % 100;
-        return 5;
-    }
-
     function getContractBalance() public view returns(uint256){
         return address(this).balance;
+    }
+
+    //- ChainlinkVRF -
+    function requestRandomWords() internal {
+        // Will revert if subscription is not set and funded.
+        s_requestId = COORDINATOR.requestRandomWords(
+        keyHash,
+        s_subscriptionId,
+        requestConfirmations,
+        callbackGasLimit,
+        1
+        );
+    }
+  
+    function fulfillRandomWords(
+        uint256, /* requestId */
+        uint256[] memory randomWords
+    ) internal override {
+        endLottery(randomWords);
     }
 }

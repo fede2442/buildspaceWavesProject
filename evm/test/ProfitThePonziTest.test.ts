@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, Contract, Signer } from "ethers";
 import { ethers } from "hardhat";
 import { ProfitThePonzi } from "../typechain/ProfitThePonzi";
 
@@ -15,6 +15,7 @@ describe("Buying tickets and ownership", () => {
   let ticketPriceInWei: string;
   let totalAmountOfTickets: number;
   let maxTicketsPerAccount: number;
+  // let profitThePonziContract: ProfitThePonzi, hardhatVrfCoordinatorV2Mock;
 
   beforeEach(async () => {
     [owner, buyerOne, buyerTwo, loserSigner] = await ethers.getSigners();
@@ -25,7 +26,7 @@ describe("Buying tickets and ownership", () => {
     const profitThePonziFactory = await ethers.getContractFactory(
       "ProfitThePonzi"
     );
-    lottery = await profitThePonziFactory.deploy();
+    lottery = await profitThePonziFactory.deploy(1);
     await lottery.deployed();
   });
 
@@ -143,14 +144,6 @@ describe("Buying tickets and ownership", () => {
     expect(await lottery.buyerOfTicket(1)).to.not.eq(
       await buyerOne.getAddress()
     );
-  });
-
-  describe("After all tickets sold", () => {
-    it("lottery ends picking 3 winners", async () => { });
-
-    it("lottery resets and new lottery start", async () => { });
-
-    it("SuperJackpot is 10% of total", async () => { });
   });
 
   describe("Events Emitted", () => {
