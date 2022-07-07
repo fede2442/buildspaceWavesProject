@@ -1,11 +1,33 @@
 # ProfitThePonzi - Decentralized lottery game
 
-This is my try at buildspace's first project after finishing a solidity bootcamp at Encode academy.
+Hi there !
 
+This project originally started following buildspace's Waves project. In the middle of doing it I decided to build my own idea of a lottery with 3 winners and a few other things. This also helped me strenghten the skills learnt at the solidity bootcamp @ Encode.
 
+Link to deployed app: (Working on some changes)
 First rinkeby deploy :) : https://rinkeby.etherscan.io/address/0x0856aec2139533B25B19F7DC08130A46f650C82e
 
+At the bottom of this readme you can see some screenshots of the progress.
 
+I also have been writing down almost all the links I have been through while doing the project. Some issues I encountered and some new knowledge about the workings of EVM, MEV, hardhat, react, etc etc.
+
+Thanks for reading and I invite you to buy a ticket in the testnet application!
+
+Rinkeby faucet (This faucet gives you test eth in rinkeby) -- https://faucet.rinkeby.io
+
+---
+Ideas for the lottery:
+
+- Selling 50 tickets 1 to 50.
+- each account can only buy up to 5 tickets.
+- ticket price should be low, 0.05 eth each.
+- There will be 3 winners.
+    *First --- 48%
+    *Second --- 26%
+    *Third --- 16%
+    *SuperJackpot --- 10%
+- SuperJackpot winning not defined yet
+- Randomness with a commit/reveal schema.
 ---
 
 Useful links found while doing the project:
@@ -91,20 +113,7 @@ issues between React and ESLint: (AWESOME ARTICLE)
 
 https://andrebnassis.medium.com/setting-eslint-on-a-react-typescript-project-2021-1190a43ffba
 
----
-Ideas for the lottery:
 
-- Selling 50 tickets 1 to 50.
-- each account can only buy up to 5 tickets.
-- ticket price should be low, 0.05 eth each.
-- There will be 3 winners.
-    *First --- 48%
-    *Second --- 26%
-    *Third --- 16%
-    *SuperJackpot --- 10%
-- SuperJackpot winning not defined yet
-- Randomness with a commit/reveal schema.
----
 
 Progress images:
 
