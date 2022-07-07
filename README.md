@@ -5,6 +5,7 @@ Hi there !
 This project originally started following buildspace's Waves project. In the middle of doing it I decided to build my own idea of a lottery with 3 winners and a few other things. This also helped me strenghten the skills learnt at the solidity bootcamp @ Encode.
 
 Link to deployed app: (Working on some changes)
+
 First rinkeby deploy :) : https://rinkeby.etherscan.io/address/0x0856aec2139533B25B19F7DC08130A46f650C82e
 
 At the bottom of this readme you can see some screenshots of the progress.
