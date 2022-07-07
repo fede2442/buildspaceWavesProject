@@ -23,12 +23,17 @@ Ideas for the lottery:
 - each account can only buy up to 5 tickets.
 - ticket price should be low, 0.05 eth each.
 - There will be 3 winners.
+
     *First --- 48%
+    
     *Second --- 26%
+    
     *Third --- 16%
+    
     *SuperJackpot --- 10%
-- SuperJackpot winning not defined yet
-- Randomness with a commit/reveal schema.
+    
+- SuperJackpot gets added to the jackpot every 5 lottery games.
+- Randomness with ChainlinkVRF.
 ---
 
 Useful links found while doing the project:
