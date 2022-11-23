@@ -1,4 +1,4 @@
-# ProfitThePonzi - Decentralized lottery game
+# Testeando Github - Decentralized lottery game
 
 Hi there !
 
